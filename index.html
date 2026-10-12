@@ -120,6 +120,27 @@ label.chk input{accent-color:var(--red)}
 .loader i{width:18px;height:18px;border:3px solid var(--line);border-top-color:var(--red);border-radius:50%;animation:sp 0.8s linear infinite}
 @keyframes sp{to{transform:rotate(360deg)}}
 .hide{display:none!important}
+.fbar{display:flex;flex-direction:column;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;margin:0 0 12px}
+.fbar .srch{position:relative}.fbar .srch input{width:100%;padding:10px 12px 10px 34px;font-size:13.5px}
+.fbar .srch:before{content:"⌕";position:absolute;left:12px;top:50%;transform:translateY(-52%);color:var(--mut);font-size:17px}
+.fpills{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.fp{position:relative}
+.fp>button{background:#0e1117;border:1px solid var(--line);color:var(--txt);border-radius:10px;padding:8px 12px;font-size:13px;font-weight:600;display:flex;gap:6px;align-items:center}
+.fp>button:after{content:"";border:4px solid transparent;border-top-color:var(--mut);margin-top:4px}
+.fp>button.on{border-color:var(--red);background:rgba(255,59,59,.10)}
+.fp>button em{font-style:normal;color:var(--red);font-weight:700}
+.fpop{display:none;position:absolute;top:calc(100% + 6px);left:0;z-index:30;background:var(--card2);border:1px solid #3a4252;border-radius:12px;padding:12px;min-width:230px;box-shadow:0 12px 40px rgba(0,0,0,.5)}
+.fp.open .fpop{display:block}
+.fpop .t{font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:.06em;font-weight:700;margin-bottom:8px}
+.fpop .mm{display:flex;gap:6px;align-items:center}.fpop .mm input{width:100px;padding:7px 9px;font-size:13px}
+.fpop .pre{display:flex;flex-wrap:wrap;gap:5px;margin-top:9px}
+.fpop .pre button,.fpop .opt{background:#0e1117;border:1px solid var(--line);color:var(--txt);border-radius:16px;padding:5px 10px;font-size:12px}
+.fpop .opts{display:flex;flex-direction:column;gap:4px;max-height:320px;overflow:auto}
+.fpop .opt{border-radius:8px;text-align:left;padding:7px 10px;font-size:13px}
+.fpop .opt.on,.fpop .pre button:hover,.fpop .opt:hover{border-color:var(--red);background:rgba(255,59,59,.12)}
+.fp.tg>button:after{display:none}
+.fclear{background:none;border:0;color:var(--mut);font-size:12.5px;text-decoration:underline}
+.fcount{margin-left:auto;font-size:12.5px;color:var(--mut)}
 footer{color:var(--mut);font-size:11.5px;text-align:center;margin-top:40px}
 @media(max-width:900px){.verdict{grid-template-columns:1fr 1fr}.cards{grid-template-columns:1fr}header{flex-wrap:wrap}.tabs{margin-left:0}}
 </style>
@@ -182,7 +203,9 @@ footer{color:var(--mut);font-size:11.5px;text-align:center;margin-top:40px}
     </div>
     <div class="chips" id="chips"></div>
     <div class="filters">
+      <label>Mín. inscritos <input type="number" id="fSubsMin" value="" step="1000" placeholder="0"></label>
       <label>Máx. inscritos <input type="number" id="fSubs" value="100000" step="1000"></label>
+      <label>Máx. vídeos no canal <input type="number" id="fVid" value="" step="1" placeholder="qualquer"></label>
       <label>Mín. views do vídeo <input type="number" id="fViews" value="10000" step="1000"></label>
       <label>Canal criado há no máx. <select id="fAge"><option value="90">3 meses</option><option value="60">2 meses</option><option value="30">1 mês</option><option value="20">20 dias</option><option value="15">15 dias</option><option value="10">10 dias</option><option value="0" selected>qualquer</option></select></label>
       <label><input type="checkbox" id="fNoShorts"> Esconder Shorts</label>
@@ -206,18 +229,37 @@ footer{color:var(--mut);font-size:11.5px;text-align:center;margin-top:40px}
   <div class="dhead">
     <div><h2>✨ Canais novos bombando</h2>
     <div class="sub">📡 Lista atualizada todo dia pelo Radar, sem gastar sua cota. Canais com o <b>1º vídeo há no máx. 90 dias</b>, até 15 vídeos e 20 mil+ views.</div></div>
-    <div class="row" style="gap:8px">
-    <select id="dniche"></select>
-    <select id="dlang"><option value="pt|BR">🇧🇷 Português</option><option value="en|US">🇺🇸 Inglês</option><option value="es|MX">🇲🇽 Espanhol</option><option value="de|DE">🇩🇪 Alemão</option><option value="fr|FR">🇫🇷 Francês</option></select>
-    <label class="chk"><input type="checkbox" id="dNoShorts"> Esconder Shorts</label>
-    <button class="btn" id="dref">🔎 Procurar canais novos</button></div>
+    <button class="btn" id="dref">🔎 Procurar canais novos</button>
   </div>
-  <div class="filters" style="margin:0 0 6px">
-    <label>Máx. inscritos <input type="number" id="dSubs" value="" step="1000" placeholder="qualquer"></label>
-    <label>Mín. views do vídeo <input type="number" id="dViews" value="" step="1000" placeholder="qualquer"></label>
-    <label>1º vídeo há no máx. <select id="dAge"><option value="0">90 dias</option><option value="60">60 dias</option><option value="30">30 dias</option><option value="15">15 dias</option><option value="7">7 dias</option></select></label>
-    <label>Ordenar <select id="dSort"><option value="score">Nota de nicho</option><option value="mult">Views ÷ inscritos</option><option value="views">Views do vídeo</option><option value="vpd">Views por dia</option><option value="young">Canal mais novo</option><option value="subs">Menos inscritos</option></select></label>
-    <span class="hint" style="margin:0">Filtros não gastam cota.</span>
+  <div class="fbar">
+    <div class="srch"><input id="dQ" placeholder="Buscar por nome, nicho ou título de vídeo..." autocomplete="off"></div>
+    <div class="fpills">
+      <div class="fp" data-k="lang"><button>Idioma</button><div class="fpop"><div class="t">Idioma do Radar</div><div class="opts">
+        <button class="opt" data-v="pt|BR">🇧🇷 Português</button><button class="opt" data-v="en|US">🇺🇸 Inglês</button><button class="opt" data-v="es|MX">🇲🇽 Espanhol</button><button class="opt" data-v="de|DE">🇩🇪 Alemão</button><button class="opt" data-v="fr|FR">🇫🇷 Francês</button></div></div></div>
+      <div class="fp" data-k="cat"><button>Categoria</button><div class="fpop"><div class="t">Categoria</div><div class="opts" id="catOpts"></div></div></div>
+      <div class="fp" data-k="subs"><button>Inscritos</button><div class="fpop"><div class="t">Inscritos do canal</div>
+        <div class="mm"><input type="number" id="dSubsMin" placeholder="mín."> – <input type="number" id="dSubs" placeholder="máx."></div>
+        <div class="pre" data-min="dSubsMin" data-max="dSubs"><button data-r="0-1000">até 1 mil</button><button data-r="0-10000">até 10 mil</button><button data-r="1000-50000">1 mil – 50 mil</button><button data-r="10000-">10 mil+</button><button data-r="-">qualquer</button></div></div></div>
+      <div class="fp" data-k="views"><button>Views</button><div class="fpop"><div class="t">Views do melhor vídeo</div>
+        <div class="mm"><input type="number" id="dViews" placeholder="mín."> – <input type="number" id="dViewsMax" placeholder="máx."></div>
+        <div class="pre" data-min="dViews" data-max="dViewsMax"><button data-r="10000-">10 mil+</button><button data-r="50000-">50 mil+</button><button data-r="100000-">100 mil+</button><button data-r="1000000-">1 mi+</button><button data-r="-">qualquer</button></div></div></div>
+      <div class="fp" data-k="vids"><button>Vídeos</button><div class="fpop"><div class="t">Vídeos no canal</div>
+        <div class="mm"><input type="number" id="dVidMin" placeholder="mín."> – <input type="number" id="dVidMax" placeholder="máx."></div>
+        <div class="pre" data-min="dVidMin" data-max="dVidMax"><button data-r="1-3">1 – 3</button><button data-r="1-5">até 5</button><button data-r="5-10">5 – 10</button><button data-r="10-">10+</button><button data-r="-">qualquer</button></div></div></div>
+      <div class="fp" data-k="age"><button>1º vídeo</button><div class="fpop"><div class="t">1º vídeo há no máximo</div><div class="opts">
+        <button class="opt" data-v="0">90 dias</button><button class="opt" data-v="60">60 dias</button><button class="opt" data-v="30">30 dias</button><button class="opt" data-v="15">15 dias</button><button class="opt" data-v="7">7 dias</button></div></div></div>
+      <div class="fp" data-k="fmt"><button>Formato</button><div class="fpop"><div class="t">Formato dos vídeos</div><div class="opts">
+        <button class="opt" data-v="">Todos</button><button class="opt" data-v="long">Sem Shorts</button><button class="opt" data-v="short">Só Shorts</button></div></div></div>
+      <div class="fp" data-k="sort"><button>Ordenar</button><div class="fpop"><div class="t">Ordenar por</div><div class="opts">
+        <button class="opt" data-v="score">Nota de nicho</button><button class="opt" data-v="mult">Views ÷ inscritos</button><button class="opt" data-v="views">Views do vídeo</button><button class="opt" data-v="vpd">Views por dia</button><button class="opt" data-v="young">Canal mais novo</button><button class="opt" data-v="subs">Menos inscritos</button><button class="opt" data-v="nvid">Menos vídeos</button></div></div></div>
+      <button class="fclear" id="fClear">Limpar filtros</button>
+      <span class="fcount" id="fCount"></span>
+    </div>
+    <select id="dlang" class="hide"><option value="pt|BR"></option><option value="en|US"></option><option value="es|MX"></option><option value="de|DE"></option><option value="fr|FR"></option></select>
+    <select id="dniche" class="hide"></select><select id="dAge" class="hide"><option value="0"></option><option value="60"></option><option value="30"></option><option value="15"></option><option value="7"></option></select>
+    <select id="dSort" class="hide"><option value="score"></option><option value="mult"></option><option value="views"></option><option value="vpd"></option><option value="young"></option><option value="subs"></option><option value="nvid"></option></select>
+    <select id="dFmt" class="hide"><option value=""></option><option value="long"></option><option value="short"></option></select>
+    <input type="checkbox" id="dNoShorts" class="hide">
   </div>
   <div class="msg" id="dmsg"></div>
   <div class="loader" id="dload"><i></i><span id="dlt">Procurando canais novos...</span></div>
@@ -401,7 +443,7 @@ function build(V,C){
   const by={};const now=Date.now();
   V.forEach(v=>{const c=C[v.snippet.channelId];if(!c)return;const views=+(v.statistics.viewCount||0);
     const s=secs(v.contentDetails&&v.contentDetails.duration);const vd=Math.max(1,(now-new Date(v.snippet.publishedAt))/864e5);
-    const vo={id:v.id,title:v.snippet.title,thumb:(v.snippet.thumbnails.medium||v.snippet.thumbnails.default).url,views,secs:s,short:s>0&&s<=180,date:v.snippet.publishedAt,vpd:views/vd};
+    const vo={id:v.id,cat:v.snippet.categoryId,title:v.snippet.title,thumb:(v.snippet.thumbnails.medium||v.snippet.thumbnails.default).url,views,secs:s,short:s>0&&s<=180,date:v.snippet.publishedAt,vpd:views/vd};
     const e=by[c.id]||(by[c.id]={id:c.id,name:c.snippet.title,handle:c.snippet.customUrl||'',avatar:(c.snippet.thumbnails.default||{}).url,
       created:c.snippet.publishedAt,country:c.snippet.country||'',hidden:!!c.statistics.hiddenSubscriberCount,subs:+(c.statistics.subscriberCount||0),
       total:+(c.statistics.viewCount||0),nvid:+(c.statistics.videoCount||0),vids:[]});
@@ -421,15 +463,15 @@ function score(e){
 const sig=s=>s>=65?['g','VERDE','#2ecc71']:s>=40?['y','AMARELO','#ffc93c']:['r','VERMELHO','#ff3b3b'];
 
 function filtered(list){
-  const ms=+$('#fSubs').value||Infinity,mv=+$('#fViews').value||0,ma=+$('#fAge').value,ns=$('#fNoShorts').checked;
+  const ms=+$('#fSubs').value||Infinity,mn=+$('#fSubsMin').value||0,mxv=+$('#fVid').value||Infinity,mv=+$('#fViews').value||0,ma=+$('#fAge').value,ns=$('#fNoShorts').checked;
   let L=list.map(e=>{const vids=ns?e.vids.filter(v=>!v.short):e.vids;if(!vids.length)return null;
       const x={...e,vids};const b=vids[0];x.best=b.views;x.vpd=b.vpd;x.mult=x.hidden||!x.subs?null:b.views/x.subs;x.score=score(x);return x}).filter(Boolean)
-    .filter(e=>(e.hidden||e.subs<=ms)&&e.best>=mv&&(!ma||e.age<=ma));
+    .filter(e=>(e.hidden||(e.subs<=ms&&e.subs>=mn))&&e.nvid<=mxv&&e.best>=mv&&(!ma||e.age<=ma));
   const k=$('#sort').value;
   const f={score:e=>e.score,mult:e=>e.mult||0,views:e=>e.best,vpd:e=>e.vpd,young:e=>-e.age}[k];
   return L.sort((a,b)=>f(b)-f(a));
 }
-['fSubs','fViews','fAge','fNoShorts','sort'].forEach(id=>$('#'+id).addEventListener('change',render));
+['fSubs','fSubsMin','fVid','fViews','fAge','fNoShorts','sort'].forEach(id=>$('#'+id).addEventListener('change',render));
 
 function render(){
   const L=filtered(RESULTS);$('#empty').classList.toggle('hide',!!RESULTS.length);
@@ -470,20 +512,46 @@ function card(e,i){
     <button class="cp" data-id="${e.id}">Copiar link</button></div></div>`;
 }
 /* ---------- canais novos (mesmo critério do Radar: 1º vídeo ≤ 90 dias, ≤ 15 vídeos, ≥ 20 mil views) ---------- */
-const KW={"pt":[["documentário completo","Documentário"],["o que aconteceu com","Documentário"],["a ascensão e queda de","Documentário"],["documentário animais","Animais"],["animais selvagens","Animais"],["predadores mais perigosos","Animais"],["animais do pantanal","Animais"],["aves raras","Animais"],["animais pré-históricos","Pré-história"],["dinossauros documentário","Pré-história"],["megalodon","Pré-história"],["fundo do mar","Oceano"],["criaturas do oceano profundo","Oceano"],["tubarões documentário","Oceano"],["a tragédia de","Tragédias e Desastres"],["desastres naturais documentário","Tragédias e Desastres"],["tsunami documentário","Tragédias e Desastres"],["mistérios da história","Arqueologia e Mistérios"],["arqueologia descoberta","Arqueologia e Mistérios"],["civilizações antigas","Arqueologia e Mistérios"],["história do brasil","História"],["história medieval","História"],["segunda guerra mundial documentário","História"],["império romano","História"],["caso real","True Crime"],["crimes reais","True Crime"],["casos não resolvidos","True Crime"],["universo documentário","Espaço"],["espaço sideral","Espaço"],["buracos negros","Espaço"],["megaconstruções","Engenharia e Construção"],["engenharia incrível","Engenharia e Construção"],["como é viver em","Países e Vida Real"],["vida real em","Países e Vida Real"],["país mais pobre do mundo","Países e Vida Real"],["curiosidades","Curiosidades"],["você sabia","Curiosidades"],["fatos incríveis","Curiosidades"],["coisas que você não sabia","Curiosidades"],["bíblia explicada","Bíblia e Religião"],["personagens bíblicos","Bíblia e Religião"],["arqueologia bíblica","Bíblia e Religião"],["como ficar rico","Finanças e Negócios"],["história de empresas","Finanças e Negócios"],["finanças pessoais","Finanças e Negócios"],["inteligência artificial","Tecnologia e IA"],["tecnologia do futuro","Tecnologia e IA"],["música relaxante","Música e Relax"],["lofi","Música e Relax"],["corpo humano","Saúde e Corpo"],["saúde depois dos 60","Saúde e Corpo"]],"en":[["documentary","Documentário"],["full documentary","Documentário"],["the rise and fall of","Documentário"],["what happened to","Documentário"],["animal documentary","Animais"],["wildlife documentary","Animais"],["predator vs prey","Animais"],["rarest animals","Animais"],["strangest creatures","Animais"],["prehistoric animals documentary","Pré-história"],["dinosaurs documentary","Pré-história"],["prehistoric ocean monsters","Pré-história"],["ice age documentary","Pré-história"],["deep sea creatures","Oceano"],["deep ocean documentary","Oceano"],["sharks documentary","Oceano"],["disaster documentary","Tragédias e Desastres"],["the tragedy of","Tragédias e Desastres"],["worst disasters in history","Tragédias e Desastres"],["ancient civilizations documentary","Arqueologia e Mistérios"],["archaeology discovery","Arqueologia e Mistérios"],["scientists finally discovered","Arqueologia e Mistérios"],["unexplained mysteries","Arqueologia e Mistérios"],["history documentary","História"],["medieval history","História"],["ww2 documentary","História"],["ancient rome","História"],["cold war documentary","História"],["true crime documentary","True Crime"],["bodycam","True Crime"],["unsolved cases","True Crime"],["interrogation","True Crime"],["space documentary","Espaço"],["universe documentary","Espaço"],["black holes","Espaço"],["mega projects","Engenharia e Construção"],["engineering documentary","Engenharia e Construção"],["how it was built","Engenharia e Construção"],["life in","Países e Vida Real"],["real life in","Países e Vida Real"],["inside the most isolated country","Países e Vida Real"],["things you didn't know","Curiosidades"],["facts","Curiosidades"],["explained","Curiosidades"],["why do","Curiosidades"],["bible explained","Bíblia e Religião"],["biblical history","Bíblia e Religião"],["biblical archaeology","Bíblia e Religião"],["business documentary","Finanças e Negócios"],["how they made billions","Finanças e Negócios"],["personal finance","Finanças e Negócios"],["artificial intelligence explained","Tecnologia e IA"],["future technology","Tecnologia e IA"],["ai documentary","Tecnologia e IA"],["lofi hip hop","Música e Relax"],["relaxing music","Música e Relax"],["sleep music","Música e Relax"],["ambient music","Música e Relax"],["human body documentary","Saúde e Corpo"],["health after 60","Saúde e Corpo"]],"es":[["documental completo","Documentário"],["qué pasó con","Documentário"],["documental animales","Animais"],["animales salvajes","Animais"],["animales más raros","Animais"],["animales prehistóricos","Pré-história"],["dinosaurios documental","Pré-história"],["fondo del mar documental","Oceano"],["criaturas del océano","Oceano"],["la tragedia de","Tragédias e Desastres"],["desastres naturales documental","Tragédias e Desastres"],["misterios de la historia","Arqueologia e Mistérios"],["civilizaciones antiguas","Arqueologia e Mistérios"],["historia de méxico","História"],["historia medieval documental","História"],["segunda guerra mundial documental","História"],["casos reales","True Crime"],["crimen real documental","True Crime"],["universo documental","Espaço"],["el espacio","Espaço"],["megaconstrucciones","Engenharia e Construção"],["ingeniería documental","Engenharia e Construção"],["así es la vida en","Países e Vida Real"],["cuánto cuesta vivir en","Países e Vida Real"],["curiosidades","Curiosidades"],["datos increíbles","Curiosidades"],["la biblia explicada","Bíblia e Religião"],["historia bíblica","Bíblia e Religião"],["historia de empresas","Finanças e Negócios"],["finanzas personales","Finanças e Negócios"],["inteligencia artificial","Tecnologia e IA"],["tecnología del futuro","Tecnologia e IA"],["música relajante","Música e Relax"],["cuerpo humano","Saúde e Corpo"],["salud después de los 60","Saúde e Corpo"]],"de":[["dokumentation","Documentário"],["doku deutsch","Documentário"],["was geschah mit","Documentário"],["tierdoku","Animais"],["wildtiere doku","Animais"],["gefährlichste tiere","Animais"],["dinosaurier doku","Pré-história"],["urzeit tiere","Pré-história"],["tiefsee doku","Oceano"],["haie doku","Oceano"],["katastrophen doku","Tragédias e Desastres"],["die tragödie von","Tragédias e Desastres"],["antike zivilisationen","Arqueologia e Mistérios"],["archäologie doku","Arqueologia e Mistérios"],["ungelöste rätsel","Arqueologia e Mistérios"],["geschichte doku","História"],["zweiter weltkrieg doku","História"],["mittelalter doku","História"],["römisches reich","História"],["true crime deutsch","True Crime"],["kriminalfall doku","True Crime"],["ungelöste fälle","True Crime"],["weltall doku","Espaço"],["universum doku","Espaço"],["schwarze löcher","Espaço"],["megabauten","Engenharia e Construção"],["ingenieurskunst doku","Engenharia e Construção"],["so lebt man in","Países e Vida Real"],["leben in","Países e Vida Real"],["fakten die du nicht wusstest","Curiosidades"],["erklärt","Curiosidades"],["warum ist","Curiosidades"],["bibel erklärt","Bíblia e Religião"],["biblische geschichte doku","Bíblia e Religião"],["finanzen","Finanças e Negócios"],["wirtschaft doku","Finanças e Negócios"],["künstliche intelligenz","Tecnologia e IA"],["technik der zukunft","Tecnologia e IA"],["entspannungsmusik","Música e Relax"],["menschlicher körper doku","Saúde e Corpo"],["gesundheit ab 60","Saúde e Corpo"]],"fr":[["documentaire complet","Documentário"],["documentaire français","Documentário"],["que s'est-il passé","Documentário"],["documentaire animalier","Animais"],["animaux sauvages","Animais"],["animaux les plus dangereux","Animais"],["dinosaures documentaire","Pré-história"],["animaux préhistoriques","Pré-história"],["créatures des abysses","Oceano"],["fond des océans documentaire","Oceano"],["catastrophe documentaire","Tragédias e Desastres"],["la tragédie de","Tragédias e Desastres"],["civilisations anciennes","Arqueologia e Mistérios"],["mystères de l'histoire","Arqueologia e Mistérios"],["archéologie documentaire","Arqueologia e Mistérios"],["histoire documentaire","História"],["seconde guerre mondiale documentaire","História"],["moyen âge documentaire","História"],["empire romain","História"],["affaire criminelle","True Crime"],["true crime français","True Crime"],["affaire non résolue","True Crime"],["univers documentaire","Espaço"],["espace documentaire","Espaço"],["trous noirs","Espaço"],["méga constructions","Engenharia e Construção"],["ingénierie documentaire","Engenharia e Construção"],["la vie en","Países e Vida Real"],["vivre en","Países e Vida Real"],["pays le plus pauvre du monde","Países e Vida Real"],["le saviez-vous","Curiosidades"],["faits incroyables","Curiosidades"],["expliqué","Curiosidades"],["la bible expliquée","Bíblia e Religião"],["histoire biblique documentaire","Bíblia e Religião"],["finances personnelles","Finanças e Negócios"],["histoire d'entreprise","Finanças e Negócios"],["économie documentaire","Finanças e Negócios"],["intelligence artificielle","Tecnologia e IA"],["technologie du futur","Tecnologia e IA"],["musique relaxante","Música e Relax"],["corps humain documentaire","Saúde e Corpo"],["santé après 60 ans","Saúde e Corpo"]]};
+const KW={"pt":[["curiosidades que você não sabia","Curiosidades"],["fatos perturbadores","Curiosidades"],["coisas que ninguém te conta","Curiosidades"],["curiosidades sombrias","Curiosidades"],["você sabia que","Curiosidades"],["fatos bizarros","Curiosidades"],["história dos videogames","Jogos"],["lore de jogos","Jogos"],["jogos antigos","Jogos"],["a história do jogo","Jogos"],["curiosidades de games","Jogos"],["jogos de terror explicados","Jogos"],["história explicada","História"],["império romano","História"],["história medieval","História"],["segunda guerra mundial","História"],["história do brasil","História"],["história antiga","História"],["documentário completo","Documentário"],["o que aconteceu com","Documentário"],["a ascensão e queda de","Documentário"],["documentário dublado","Documentário"],["música para dormir","Música"],["lofi para estudar","Música"],["phonk","Música"],["música medieval","Música"],["dark ambient","Música"],["música para trabalhar","Música"],["mistérios não resolvidos","Mistérios e Dark"],["lugares proibidos","Mistérios e Dark"],["mistérios da história","Mistérios e Dark"],["civilizações antigas","Mistérios e Dark"],["creepypasta","Mistérios e Dark"],["casos paranormais","Mistérios e Dark"],["caso real","True Crime"],["crimes reais","True Crime"],["casos não resolvidos","True Crime"],["universo explicado","Espaço"],["buracos negros","Espaço"],["espaço sideral","Espaço"],["animais selvagens","Animais e Natureza"],["predadores mais perigosos","Animais e Natureza"],["criaturas do oceano profundo","Animais e Natureza"],["dinossauros documentário","Animais e Natureza"],["a tragédia de","Tragédias e Desastres"],["desastres naturais","Tragédias e Desastres"],["acidentes aéreos explicados","Tragédias e Desastres"]],"en":[["facts you didn't know","Curiosidades"],["disturbing facts","Curiosidades"],["dark facts","Curiosidades"],["things nobody tells you","Curiosidades"],["interesting facts","Curiosidades"],["weird facts","Curiosidades"],["video game history","Jogos"],["game lore explained","Jogos"],["retro games","Jogos"],["history of the game","Jogos"],["gaming documentary","Jogos"],["horror games explained","Jogos"],["history explained","História"],["roman empire","História"],["medieval history","História"],["ww2 documentary","História"],["ancient history","História"],["history for sleep","História"],["full documentary","Documentário"],["what happened to","Documentário"],["the rise and fall of","Documentário"],["documentary for sleep","Documentário"],["sleep music","Música"],["lofi hip hop","Música"],["phonk","Música"],["medieval music","Música"],["dark ambient","Música"],["study music","Música"],["unsolved mysteries","Mistérios e Dark"],["forbidden places","Mistérios e Dark"],["ancient civilizations","Mistérios e Dark"],["creepypasta","Mistérios e Dark"],["paranormal stories","Mistérios e Dark"],["mysteries explained","Mistérios e Dark"],["true crime documentary","True Crime"],["unsolved cases","True Crime"],["crime stories","True Crime"],["space documentary","Espaço"],["black holes","Espaço"],["universe explained","Espaço"],["wild animals documentary","Animais e Natureza"],["deadliest predators","Animais e Natureza"],["deep sea creatures","Animais e Natureza"],["dinosaurs documentary","Animais e Natureza"],["the tragedy of","Tragédias e Desastres"],["natural disasters documentary","Tragédias e Desastres"],["plane crash explained","Tragédias e Desastres"]],"es":[["curiosidades que no sabías","Curiosidades"],["datos perturbadores","Curiosidades"],["datos curiosos","Curiosidades"],["cosas que nadie te cuenta","Curiosidades"],["historia de los videojuegos","Jogos"],["lore de videojuegos","Jogos"],["juegos retro","Jogos"],["juegos de terror explicados","Jogos"],["historia explicada","História"],["imperio romano","História"],["historia medieval","História"],["segunda guerra mundial","História"],["documental completo","Documentário"],["qué pasó con","Documentário"],["auge y caída de","Documentário"],["música para dormir","Música"],["lofi para estudiar","Música"],["phonk","Música"],["música medieval","Música"],["misterios sin resolver","Mistérios e Dark"],["lugares prohibidos","Mistérios e Dark"],["civilizaciones antiguas","Mistérios e Dark"],["casos paranormales","Mistérios e Dark"],["casos reales","True Crime"],["crímenes sin resolver","True Crime"],["true crime en español","True Crime"],["el universo","Espaço"],["agujeros negros","Espaço"],["documental del espacio","Espaço"],["animales salvajes","Animais e Natureza"],["depredadores más peligrosos","Animais e Natureza"],["criaturas del océano","Animais e Natureza"],["la tragedia de","Tragédias e Desastres"],["desastres naturales documental","Tragédias e Desastres"]],"de":[["fakten die du nicht kennst","Curiosidades"],["verstörende fakten","Curiosidades"],["kuriose fakten","Curiosidades"],["geschichte der videospiele","Jogos"],["gaming lore erklärt","Jogos"],["retro spiele","Jogos"],["geschichte erklärt","História"],["römisches reich","História"],["mittelalter doku","História"],["zweiter weltkrieg doku","História"],["ganze doku","Documentário"],["was geschah mit","Documentário"],["aufstieg und fall","Documentário"],["musik zum einschlafen","Música"],["lofi zum lernen","Música"],["mittelalter musik","Música"],["ungelöste rätsel","Mistérios e Dark"],["verbotene orte","Mistérios e Dark"],["antike zivilisationen","Mistérios e Dark"],["true crime deutsch","True Crime"],["ungelöste kriminalfälle","True Crime"],["universum doku","Espaço"],["schwarze löcher","Espaço"],["tierdoku","Animais e Natureza"],["gefährlichste raubtiere","Animais e Natureza"],["tiefsee kreaturen","Animais e Natureza"],["die tragödie von","Tragédias e Desastres"],["naturkatastrophen doku","Tragédias e Desastres"]],"fr":[["faits que tu ne savais pas","Curiosidades"],["faits dérangeants","Curiosidades"],["le saviez-vous","Curiosidades"],["histoire du jeu vidéo","Jogos"],["lore jeux vidéo expliqué","Jogos"],["jeux rétro","Jogos"],["histoire expliquée","História"],["empire romain","História"],["moyen âge documentaire","História"],["seconde guerre mondiale","História"],["documentaire complet","Documentário"],["que s'est-il passé","Documentário"],["l'ascension et la chute","Documentário"],["musique pour dormir","Música"],["lofi pour étudier","Música"],["musique médiévale","Música"],["mystères non résolus","Mistérios e Dark"],["lieux interdits","Mistérios e Dark"],["civilisations anciennes","Mistérios e Dark"],["faits divers","True Crime"],["affaires criminelles non résolues","True Crime"],["univers documentaire","Espaço"],["trous noirs","Espaço"],["animaux sauvages documentaire","Animais e Natureza"],["prédateurs les plus dangereux","Animais e Natureza"],["créatures des abysses","Animais e Natureza"],["la tragédie de","Tragédias e Desastres"],["catastrophes naturelles documentaire","Tragédias e Desastres"]]};
 const NEW_AGE=90,NEW_MAXV=15,NEW_MINVIEWS=20000,MAX_SEARCH=3,TARGET=10;
 $('#dlang').value=LS.get('dlang','pt|BR');
-$('#dNoShorts').checked=LS.get('dns',false);
-['dSubs','dViews','dAge','dSort'].forEach(id=>{const v=LS.get(id,null);if(v!=null)$('#'+id).value=v;
-  $('#'+id).addEventListener('change',()=>{LS.set(id,$('#'+id).value);$('#dNoShorts').onchange()})});
+const FIDS=['dSubsMin','dSubs','dViews','dViewsMax','dVidMin','dVidMax','dAge','dSort','dFmt','dQ'];
+FIDS.forEach(id=>{const v=LS.get(id,null);if(v!=null)$('#'+id).value=v;
+  $('#'+id).addEventListener(id==='dQ'||$('#'+id).type==='number'?'input':'change',()=>{LS.set(id,$('#'+id).value);redrawD()})});
+$('#dNoShorts').checked=$('#dFmt').value==='long';
+/* barra de filtros (pílulas) */
+document.querySelectorAll('.fp>button').forEach(b=>b.onclick=ev=>{ev.stopPropagation();const p=b.parentElement,o=p.classList.contains('open');
+  document.querySelectorAll('.fp.open').forEach(x=>x.classList.remove('open'));if(!o)p.classList.add('open')});
+document.addEventListener('click',e=>{if(!e.target.closest('.fpop'))document.querySelectorAll('.fp.open').forEach(x=>x.classList.remove('open'))});
+const FSEL={lang:'dlang',cat:'dniche',age:'dAge',sort:'dSort',fmt:'dFmt'};
+function bindOpts(){Object.entries(FSEL).forEach(([k,id])=>{document.querySelectorAll(`.fp[data-k=${k}] .opt`).forEach(o=>{
+  o.classList.toggle('on',o.dataset.v===$('#'+id).value);
+  o.onclick=()=>{const s=$('#'+id);s.value=o.dataset.v;s.dispatchEvent(new Event('change'));o.closest('.fp').classList.remove('open');bindOpts()}})});pillLabels()}
+document.querySelectorAll('.pre').forEach(p=>p.querySelectorAll('button').forEach(b=>b.onclick=()=>{const [mn,mx]=b.dataset.r.split('-');
+  $('#'+p.dataset.min).value=mn;$('#'+p.dataset.max).value=mx;[p.dataset.min,p.dataset.max].forEach(id=>LS.set(id,$('#'+id).value));redrawD();b.closest('.fp').classList.remove('open')}));
+['dAge','dSort','dFmt'].forEach(id=>$('#'+id).addEventListener('change',()=>{$('#dNoShorts').checked=$('#dFmt').value==='long'}));
+function rng(a,b){const f=x=>fmt(+x);a=$('#'+a).value;b=$('#'+b).value;return a&&b?f(a)+'–'+f(b):a?f(a)+'+':b?'até '+f(b):''}
+function pillLabels(){const sel=id=>{const s=$('#'+id);return s.value};
+  const L={lang:{'pt|BR':'🇧🇷 PT','en|US':'🇺🇸 EN','es|MX':'🇲🇽 ES','de|DE':'🇩🇪 DE','fr|FR':'🇫🇷 FR'}[sel('dlang')],
+    cat:sel('dniche')&&sel('dniche')!=='*'?sel('dniche'):'',subs:rng('dSubsMin','dSubs'),views:rng('dViews','dViewsMax'),vids:rng('dVidMin','dVidMax'),
+    age:+sel('dAge')?sel('dAge')+' dias':'',fmt:{long:'Sem Shorts',short:'Só Shorts'}[sel('dFmt')]||'',
+    sort:sel('dSort')!=='score'?document.querySelector(`.fp[data-k=sort] .opt[data-v="${sel('dSort')}"]`).textContent:''};
+  const N={lang:'Idioma',cat:'Categoria',subs:'Inscritos',views:'Views',vids:'Vídeos',age:'1º vídeo',fmt:'Formato',sort:'Ordenar'};
+  document.querySelectorAll('.fp').forEach(p=>{const k=p.dataset.k,v=L[k],b=p.querySelector(':scope>button');
+    b.innerHTML=N[k]+(v?': <em>'+esc(v)+'</em>':'');b.classList.toggle('on',!!v&&k!=='lang')})}
+$('#fClear').onclick=()=>{['dSubsMin','dSubs','dViews','dViewsMax','dVidMin','dVidMax','dQ'].forEach(id=>{$('#'+id).value='';LS.set(id,'')});
+  $('#dAge').value='0';$('#dSort').value='score';$('#dFmt').value='';$('#dniche').value='*';['dAge','dSort','dFmt'].forEach(id=>LS.set(id,$('#'+id).value));LS.set('dniche','*');
+  $('#dNoShorts').checked=false;bindOpts();redrawD()};
+function redrawD(){const lang=$('#dlang').value.split('|')[0];const L=nview(dstore(lang).list);drawDisc(L);pillLabels()}
 function nichesOf(lang){return[...new Set((KW[lang]||KW.en).map(x=>x[1]))]}
-function fillNiche(){const lang=$('#dlang').value.split('|')[0],cur=LS.get('dniche','*');
-  $('#dniche').innerHTML='<option value="">🎯 Escolha o nicho...</option><option value="*">🌎 Todos (rodízio)</option>'+nichesOf(lang).map(n=>`<option${n===cur?' selected':''}>${esc(n)}</option>`).join('');
-  if(cur==='*')$('#dniche').value='*'}
+const CICON={'Curiosidades':'💡','Jogos':'🎮','História':'📜','Documentário':'🎬','Música':'🎵','Mistérios e Dark':'🕯️','True Crime':'🔍','Espaço':'🌌','Animais e Natureza':'🐾','Tragédias e Desastres':'🌋'};
+function fillNiche(){const lang=$('#dlang').value.split('|')[0];let cur=LS.get('dniche','*');const N=nichesOf(lang);if(cur&&cur!=='*'&&!N.includes(cur))cur='*';
+  $('#dniche').innerHTML='<option value="*"></option>'+N.map(n=>`<option>${esc(n)}</option>`).join('');$('#dniche').value=cur||'*';
+  $('#catOpts').innerHTML='<button class="opt" data-v="*">🌎 Todas</button>'+N.map(n=>`<button class="opt" data-v="${esc(n)}">${CICON[n]||'•'} ${esc(n)}</button>`).join('');bindOpts()}
 fillNiche();
-$('#dniche').onchange=()=>{LS.set('dniche',$('#dniche').value);discover()};
+$('#dniche').onchange=()=>{LS.set('dniche',$('#dniche').value);discover()};pillLabels();
 $('#dlang').onchange=()=>{LS.set('dlang',$('#dlang').value);fillNiche();discover()};
-$('#dNoShorts').onchange=()=>{LS.set('dns',$('#dNoShorts').checked);const lang=$('#dlang').value.split('|')[0];const L=nview(dstore(lang).list);drawDisc(L);const dm=$('#dmsg');dm.className='msg info';dm.textContent=`${L.length} canais no filtro (0 unidades gastas).${L.length<TARGET?' Clique em 🔎 Procurar canais novos para achar mais.':''}`};
+
 $('#dref').onclick=()=>discover(true);
 let DISC=[],DBUSY=false;
 const RADAR='https://raw.githubusercontent.com/edudarkoficial/buscador-de-nichos/main/data/';let RADAR_INFO={};
@@ -496,13 +564,22 @@ async function mergeRadar(lang){const d=await loadRadar(lang);if(!d||!d.list)ret
 function dstore(lang){const st=LS.get('novos_'+lang,{list:[],chk:{},kw:0,runs:0});
   const now=Date.now();st.list=st.list.filter(e=>(now-new Date(e.first))/864e5<=NEW_AGE);
   Object.keys(st.chk).forEach(k=>{if(now-st.chk[k]>5*864e5)delete st.chk[k]});return st}
-function nview(list){const n=$('#dniche').value;return dview(n&&n!=='*'?list.filter(e=>e.cat===n):list)}
-function dview(list){const ns=$('#dNoShorts').checked;
-  return list.map(e=>{const vids=ns?e.vids.filter(v=>!v.short):e.vids;if(!vids.length)return null;if(ns&&e.shortsPct>=60)return null;
+const OLDCAT={'Oceano':'Animais e Natureza','Pré-história':'Animais e Natureza','Animais':'Animais e Natureza','Arqueologia e Mistérios':'Mistérios e Dark','Música e Relax':'Música'};
+function nview(list){list.forEach(e=>{if(OLDCAT[e.cat])e.cat=OLDCAT[e.cat]});const n=$('#dniche').value;return dview(n&&n!=='*'?list.filter(e=>e.cat===n):list)}
+const MOVIE_RE=/filme completo|full movie|pel[ií]cula completa|film complet|ganzer film|filme dublado|movie recap|resumo d[eo] filme|filme de a[cç][aã]o|filme de terror|\brecap\b/i;
+function isMovie(e){const v=e.vids||[];if(!v.length)return false;const f=v.filter(x=>x.cat==='1'&&x.secs>=3600).length,t=v.filter(x=>MOVIE_RE.test(x.title)).length;return f*2>=v.length||t*2>=v.length}
+const num=id=>{const v=$('#'+id).value;return v===''?null:+v};
+function dview(list){const fm=$('#dFmt').value,ns=fm==='long',q=($('#dQ').value||'').trim().toLowerCase();
+  const smin=num('dSubsMin'),smax=num('dSubs'),vmin=num('dViews'),vmax=num('dViewsMax'),nmin=num('dVidMin'),nmax=num('dVidMax');
+  return list.filter(e=>!isMovie(e)).map(e=>{const vids=ns?e.vids.filter(v=>!v.short):fm==='short'?e.vids.filter(v=>v.short):e.vids;if(!vids.length)return null;if(ns&&e.shortsPct>=60)return null;if(fm==='short'&&e.shortsPct<50)return null;
     const x={...e,vids};const b=vids[0];x.best=b.views;x.vpd=b.vpd;x.avg=e.nvid?e.total/e.nvid:0;x.age=Math.max(1,(Date.now()-new Date(e.first))/864e5);
     x.mult=x.hidden||!x.subs?null:b.views/x.subs;x.score=score(x);return x}).filter(Boolean)
-    .filter(e=>{const ms=+$('#dSubs').value||Infinity,mv=+$('#dViews').value||0,ma=+$('#dAge').value;return(e.hidden||e.subs<=ms)&&e.best>=mv&&(!ma||e.age<=ma)})
-    .sort((a,b)=>{const k=$('#dSort').value,f={score:e=>e.score,mult:e=>e.mult||0,views:e=>e.best,vpd:e=>e.vpd,young:e=>-e.age,subs:e=>-(e.hidden?1e12:e.subs)}[k];return f(b)-f(a)})}
+    .filter(e=>{const ma=+$('#dAge').value;
+      if(smin!=null&&(e.hidden||e.subs<smin))return false;if(smax!=null&&!e.hidden&&e.subs>smax)return false;
+      if(vmin!=null&&e.best<vmin)return false;if(vmax!=null&&e.best>vmax)return false;
+      if(nmin!=null&&e.nvid<nmin)return false;if(nmax!=null&&e.nvid>nmax)return false;if(ma&&e.age>ma)return false;
+      if(q&&!(e.name+' '+e.handle+' '+(e.cat||'')+' '+e.vids.map(v=>v.title).join(' ')).toLowerCase().includes(q))return false;return true})
+    .sort((a,b)=>{const k=$('#dSort').value,f={score:e=>e.score,mult:e=>e.mult||0,views:e=>e.best,vpd:e=>e.vpd,young:e=>-e.age,subs:e=>-(e.hidden?1e12:e.subs),nvid:e=>-e.nvid}[k];return f(b)-f(a)})}
 async function discover(force){
   if(DBUSY)return;
   const [lang,reg]=$('#dlang').value.split('|'),dm=$('#dmsg'),ns=$('#dNoShorts').checked,niche=$('#dniche').value;dm.className='msg';
@@ -547,7 +624,7 @@ async function discover(force){
   dm.className=have.length?'msg ok':'msg info';
   dm.innerHTML=`${have.length?'✅':'🔎'} ${added} canal(is) novo(s) achado(s) nesta rodada (${searches} pesquisas, ${cost.toLocaleString('pt-BR')} unidades). ${added?'':'Tente de novo (usa outras palavras do nicho) ou escolha outro nicho.'}${err?'<br>'+err.message:''}`;
 }
-function drawDisc(L){DISC=L;
+function drawDisc(L){DISC=L;const fc=$('#fCount');if(fc)fc.textContent=L.length+' canais';
   if(!L.length){$('#dcards').innerHTML=DBUSY?'':'<div class="empty"><h2>Nenhum canal novo ainda</h2>Escolha um nicho ou clique em 🔎 Procurar canais novos.</div>';return}
   $('#dcards').innerHTML=L.map((e,i)=>card(e,i)).join('');bindCards($('#dcards'),L)}
 

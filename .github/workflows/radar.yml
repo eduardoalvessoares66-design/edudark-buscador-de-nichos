@@ -3,7 +3,12 @@ name: Radar diario
 on:
   schedule:
     - cron: "30 9 * * *"   # 06:30 de Brasília (depois que a cota do Google zera)
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      budget:
+        description: 'Pesquisas por idioma em JSON (vazio = padrão)'
+        required: false
+        default: ''
 
 permissions:
   contents: write
@@ -24,6 +29,7 @@ jobs:
       - name: Rodar radar
         env:
           YT_KEY: ${{ secrets.YT_KEY }}
+          RADAR_BUDGET: ${{ github.event.inputs.budget }}
         run: python radar.py
       - name: Salvar resultados
         run: |

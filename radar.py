@@ -13,10 +13,26 @@ KEY = os.environ.get("YT_KEY", "").strip()
 API = "https://www.googleapis.com/youtube/v3/"
 NEW_AGE, NEW_MAXV, NEW_MINVIEWS = 90, 15, 20000
 # pesquisas por idioma em cada execução (100 unidades cada). Total 60 = 6.000 unidades.
-BUDGET = json.loads(os.environ.get("RADAR_BUDGET", '{"pt":20,"en":16,"es":10,"de":7,"fr":7}'))
+BUDGET = json.loads(os.environ.get("RADAR_BUDGET") or '{"pt":20,"en":16,"es":10,"de":7,"fr":7}')
 REGION = {"pt": "BR", "en": "US", "es": "MX", "de": "DE", "fr": "FR"}
 WINDOWS = [30, 7, 90]  # período da pesquisa, alterna a cada volta completa nas palavras
 NOW = datetime.now(timezone.utc)
+# nichos prioritários aparecem 2x no rodízio de cada dia
+PRIORITY = {"Curiosidades": 2, "Jogos": 2, "História": 2, "Documentário": 2, "Música": 2, "Mistérios e Dark": 2}
+OLD_CAT = {"Oceano": "Animais e Natureza", "Pré-história": "Animais e Natureza", "Animais": "Animais e Natureza",
+           "Arqueologia e Mistérios": "Mistérios e Dark"}
+MOVIE_RE = re.compile(r"filme completo|full movie|pel[ií]cula completa|film complet|ganzer film|filme dublado|"
+                      r"movie recap|resumo d[eo] filme|filme de a[cç][aã]o|filme de terror|recap\b", re.I)
+
+
+def is_movie(e):
+    """Canal de filme: maioria dos vídeos é da categoria Filmes (1) com 1h+, ou títulos de filme completo/recap."""
+    v = e["vids"]
+    if not v:
+        return False
+    long_film = sum(1 for x in v if x.get("cat") == "1" and x["secs"] >= 3600)
+    titled = sum(1 for x in v if MOVIE_RE.search(x["title"]))
+    return long_film * 2 >= len(v) or titled * 2 >= len(v)
 
 units = 0
 search_blocked = False
@@ -66,7 +82,7 @@ def vid_obj(v):
     s = secs((v.get("contentDetails") or {}).get("duration"))
     views = int(v["statistics"].get("viewCount", 0))
     th = v["snippet"]["thumbnails"]
-    return {"id": v["id"], "title": v["snippet"]["title"], "thumb": (th.get("medium") or th.get("default"))["url"],
+    return {"id": v["id"], "cat": v["snippet"].get("categoryId"), "title": v["snippet"]["title"], "thumb": (th.get("medium") or th.get("default"))["url"],
             "views": views, "secs": s, "short": 0 < s <= 180, "date": v["snippet"]["publishedAt"],
             "vpd": views / max(1, days_since(v["snippet"]["publishedAt"]))}
 
@@ -121,16 +137,23 @@ def refresh(lst):
 
 def discover(lang, st, lst, n):
     global search_blocked
-    kws = load(os.path.join(ROOT, "kw.json"), {})[lang]
+    allkw = load(os.path.join(ROOT, "kw.json"), {})[lang]
+    cats = list(dict.fromkeys(c for _, c in allkw))
+    cycle = [c for c in cats if PRIORITY.get(c, 1) >= 1] + [c for c in cats if PRIORITY.get(c, 1) >= 2]
+    kwidx = st.setdefault("kwc", {})
     known = {e["id"] for e in lst}
     chk = st.setdefault("chk", {})
     added = 0
     for _ in range(n):
         if search_blocked:
             break
-        k = st.get("kw", 0)
-        st["kw"] = k + 1
-        q, cat = kws[k % len(kws)]
+        ci = st.get("cyc", 0)
+        st["cyc"] = ci + 1
+        cat = cycle[ci % len(cycle)]
+        kws = [q for q, c in allkw if c == cat]
+        k = kwidx.get(cat, 0)
+        kwidx[cat] = k + 1
+        q = kws[k % len(kws)]
         win = WINDOWS[(k // len(kws)) % len(WINDOWS)]
         after = (NOW - timedelta(days=win)).strftime("%Y-%m-%dT%H:%M:%SZ")
         try:
@@ -139,7 +162,8 @@ def discover(lang, st, lst, n):
         except QuotaError as e:
             print(f"  ! pesquisa bloqueada: {e}")
             search_blocked = True
-            st["kw"] = k  # tenta a mesma palavra amanhã
+            st["cyc"] = ci  # tenta a mesma palavra amanhã
+            kwidx[cat] = k
             break
         ids = [i for i in dict.fromkeys(x["snippet"]["channelId"] for x in r.get("items", []))
                if i not in known and i not in chk]
@@ -162,6 +186,8 @@ def discover(lang, st, lst, n):
                     continue
                 e = {"id": c["id"], **f, "created": dates[0], "first": dates[0], "cat": cat, "kw": q,
                      "found": NOW.strftime("%Y-%m-%d"), "vids": [vid_obj(v) for v in vr["items"]]}
+                if is_movie(e):
+                    continue
                 lst.append(finish(e))
                 known.add(c["id"])
                 found += 1
@@ -189,7 +215,9 @@ def main():
         except QuotaError as e:
             print(f"  ! cota acabou: {e}")
             added = 0
-        lst = [e for e in lst if e["nvid"] <= NEW_MAXV * 2]  # canal que cresceu muito deixa de ser "novo"
+        lst = [e for e in lst if e["nvid"] <= NEW_MAXV * 2 and not is_movie(e)]  # cresceu muito ou é canal de filme
+        for e in lst:
+            e["cat"] = OLD_CAT.get(e["cat"], e["cat"])
         save(path, {"updated": NOW.strftime("%Y-%m-%dT%H:%M:%SZ"), "lang": lang, "count": len(lst), "list": lst})
         summary[lang] = {"total": len(lst), "novos_hoje": added}
         print(f"[{lang}] total {len(lst)} | +{added} hoje | unidades até agora: {units}")
