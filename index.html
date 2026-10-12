@@ -1,0 +1,591 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Buscador de Nichos · YouTube</title>
+<style>
+:root{--bg:#0a0b0f;--card:#14171e;--card2:#1a1e27;--line:#262c38;--txt:#e8ebf1;--mut:#8a93a3;--red:#ff3b3b;--yel:#ffc93c;--grn:#2ecc71;--blu:#4da3ff}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--txt);font-family:'Segoe UI',-apple-system,Roboto,sans-serif;font-size:14px;min-height:100vh}
+body::before{content:"";position:fixed;inset:0;background:radial-gradient(circle at 100% 0,rgba(255,59,59,.10),transparent 40%),radial-gradient(circle at 0 100%,rgba(77,163,255,.06),transparent 40%);pointer-events:none;z-index:-1}
+a{color:var(--blu)}
+button{font-family:inherit;cursor:pointer}
+.wrap{max-width:1240px;margin:0 auto;padding:22px 22px 60px}
+header{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+.logo{width:44px;height:32px;border-radius:9px;background:linear-gradient(135deg,#ff5a4a,#d4001f);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 22px rgba(255,59,59,.35)}
+.logo i{width:0;height:0;border-left:13px solid #fff;border-top:8px solid transparent;border-bottom:8px solid transparent;margin-left:3px}
+h1{font-size:21px;font-weight:900;letter-spacing:-.01em}
+h1 span{color:var(--red)}
+.sub{color:var(--mut);font-size:12.5px}
+.tabs{margin-left:auto;display:flex;gap:6px}
+.tab{background:transparent;border:1px solid var(--line);color:var(--mut);white-space:nowrap;padding:8px 11px;border-radius:10px;font-weight:600;font-size:13px}
+.keytab{border-color:rgba(255,201,60,.5);color:var(--yel)}
+.tab.on{background:var(--card2);color:var(--txt);border-color:#3a4252}
+.quota{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--mut);margin-left:10px;white-space:nowrap}
+.qbar{width:90px;height:7px;background:var(--line);border-radius:9px;overflow:hidden}
+.qbar b{display:block;height:100%;background:var(--grn);width:0}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}
+label.f{display:flex;flex-direction:column;gap:5px;font-size:11px;color:var(--mut);font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+input,select{background:#0e1117;border:1px solid var(--line);color:var(--txt);border-radius:10px;padding:11px 12px;font-size:14px;font-family:inherit;outline:none}
+input:focus,select:focus{border-color:var(--red)}
+.big{flex:1;min-width:260px;position:relative}
+.big input{width:100%;font-size:16px;padding:13px 14px}
+.btn{background:var(--red);color:#fff;border:0;border-radius:10px;padding:13px 22px;font-weight:800;font-size:14px;box-shadow:0 6px 20px rgba(255,59,59,.25)}
+.btn:disabled{opacity:.5;cursor:wait}
+.btn2{background:transparent;color:var(--txt);border:1px solid var(--line);border-radius:10px;padding:9px 14px;font-weight:600;font-size:13px}
+.btn2:hover{border-color:var(--red)}
+#cat{width:260px}
+.chips{display:none;flex-wrap:wrap;gap:6px;margin-top:16px}
+.chips.on{display:flex}.chips.on+.filters{margin-top:12px}
+.chips span{font-size:12px;color:var(--mut);align-self:center;margin-right:2px}
+.chips button{background:#0e1117;border:1px solid var(--line);color:var(--txt);border-radius:20px;padding:6px 12px;font-size:12.5px}
+.chips button:hover,.chips button.on{border-color:var(--red);color:#fff;background:rgba(255,59,59,.12)}
+.anyq{position:absolute;left:2px;top:100%;margin-top:7px;display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--mut);cursor:pointer;white-space:nowrap}
+.anyq input{accent-color:var(--red)}
+#t-buscar .panel>.row:first-child{row-gap:34px}
+.brk{flex-basis:100%;height:0}
+#t-buscar .panel>.row:first-child>label.f:not(:first-child){flex:1;min-width:150px}
+#t-buscar .panel>.row:first-child>label.f select{width:100%}
+#q:disabled{opacity:.55}
+.sug{position:absolute;left:0;right:0;top:100%;margin-top:4px;background:var(--card2);border:1px solid var(--line);border-radius:10px;z-index:20;display:none;overflow:hidden}
+.sug div{padding:9px 14px;cursor:pointer;font-size:14px}
+.sug div:hover,.sug div.on{background:#262c38}
+.filters{display:flex;gap:10px;flex-wrap:wrap;margin-top:34px;padding-top:14px;border-top:1px solid var(--line);align-items:center}
+.filters label{font-size:12px;color:var(--mut);display:flex;align-items:center;gap:6px}
+.filters input,.filters select{padding:7px 9px;font-size:13px}
+.filters input[type=number]{width:110px}
+.hint{font-size:12px;color:var(--mut);margin-top:10px}
+.verdict{display:grid;grid-template-columns:1.3fr repeat(4,1fr);gap:12px;margin:18px 0}
+.vbox{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.vbox .n{font-size:26px;font-weight:900}
+.vbox .l{font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:.08em;font-weight:600;margin-top:2px}
+.vmain{display:flex;align-items:center;gap:14px}
+.light{width:46px;height:46px;border-radius:50%;flex:0 0 46px;box-shadow:0 0 24px currentColor;background:currentColor}
+.vmain .t{font-size:17px;font-weight:900}
+.vmain .d{font-size:12px;color:var(--mut);margin-top:2px}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(370px,1fr));gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;position:relative;display:flex;flex-direction:column;gap:12px}
+.card:hover{border-color:#3a4252}
+.rank{position:absolute;top:-9px;left:-9px;width:34px;height:34px;border-radius:50%;background:#262c38;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:13px;border:2px solid var(--bg)}
+.rank.g1{background:linear-gradient(135deg,#ffe07a,#e0a800);color:#111}
+.top{display:flex;gap:12px;align-items:center}
+.av{width:54px;height:54px;border-radius:50%;object-fit:cover;border:2px solid var(--red);background:#222;flex:0 0 54px}
+.nm{font-weight:800;font-size:15.5px;line-height:1.2;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.hd{color:var(--mut);font-size:12px;margin-top:2px}
+.pills{display:flex;gap:5px;flex-wrap:wrap;margin-top:5px}
+.pill{font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:20px;background:#262c38;color:var(--mut)}
+.pill.r{background:rgba(255,59,59,.15);color:#ff7070}.pill.g{background:rgba(46,204,113,.15);color:var(--grn)}.pill.y{background:rgba(255,201,60,.15);color:var(--yel)}.pill.b{background:rgba(77,163,255,.15);color:var(--blu)}
+.score{margin-left:auto;width:58px;height:58px;border-radius:50%;flex:0 0 58px;display:flex;flex-direction:column;align-items:center;justify-content:center;border:3px solid;font-weight:900;font-size:19px;line-height:1}
+.score small{font-size:8.5px;font-weight:700;letter-spacing:.06em;opacity:.8;margin-top:2px}
+.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border-radius:10px;overflow:hidden}
+.metrics div{background:var(--card2);padding:8px 6px;text-align:center}
+.metrics b{display:block;font-size:15px;font-weight:800}
+.metrics span{font-size:9.5px;color:var(--mut);text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+.vid{display:flex;gap:10px;text-decoration:none;color:inherit;background:var(--card2);border-radius:10px;padding:8px}
+.vid:hover{background:#20252f}
+.th{position:relative;flex:0 0 132px;height:74px;border-radius:7px;overflow:hidden;background:#000}
+.th img{width:100%;height:100%;object-fit:cover}
+.th em{position:absolute;right:4px;bottom:4px;background:rgba(0,0,0,.85);font-style:normal;font-size:10.5px;padding:1px 5px;border-radius:4px;font-weight:700}
+.vt{font-size:12.5px;font-weight:600;line-height:1.3;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.vm{font-size:11.5px;color:var(--mut);margin-top:4px}
+.vm b{color:var(--yel)}
+.acts{display:flex;gap:6px;flex-wrap:wrap}
+.acts a,.acts button{font-size:12px;padding:7px 10px;border-radius:8px;border:1px solid var(--line);background:transparent;color:var(--txt);text-decoration:none;font-weight:600}
+.acts .p{background:var(--red);border-color:var(--red);color:#fff}
+.acts button.fav.on{color:var(--yel);border-color:var(--yel)}
+.empty{text-align:center;padding:60px 20px;color:var(--mut)}
+.empty h2{color:var(--txt);font-size:20px;margin-bottom:8px}
+.msg{padding:12px 16px;border-radius:10px;margin-top:14px;font-size:13.5px;display:none}
+.msg.err{display:block;background:rgba(255,59,59,.1);border:1px solid rgba(255,59,59,.35);color:#ffb3b3}
+.msg.ok{display:block;background:rgba(46,204,113,.1);border:1px solid rgba(46,204,113,.35);color:#a8f0c6}
+.msg.info{display:block;background:rgba(77,163,255,.08);border:1px solid rgba(77,163,255,.3);color:#bcdcff}
+.keybox{max-width:760px}
+.keybox h2{font-size:20px;margin-bottom:6px}
+.steps{counter-reset:s;margin:16px 0}
+.steps li{list-style:none;counter-increment:s;padding:10px 0 10px 44px;position:relative;border-bottom:1px solid var(--line);color:#c9cfda;line-height:1.5}
+.steps li::before{content:counter(s);position:absolute;left:0;top:9px;width:28px;height:28px;border-radius:50%;background:var(--red);color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:13px}
+.steps b{color:var(--txt)}
+.krow{display:flex;gap:8px;margin-top:10px}
+.krow input{flex:1;font-family:Consolas,monospace}
+table.leg{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px}
+table.leg td{padding:7px 8px;border-bottom:1px solid var(--line);color:#c9cfda;vertical-align:top}
+.dhead{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;margin:4px 0 16px;flex-wrap:wrap}
+.dhead h2{font-size:20px;font-weight:900}
+.dhead .sub b{color:var(--grn)}
+label.chk{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--mut);background:#0e1117;border:1px solid var(--line);border-radius:10px;padding:9px 12px;cursor:pointer}
+label.chk input{accent-color:var(--red)}
+.loader{display:none;align-items:center;gap:10px;color:var(--mut);margin:24px 0}
+.loader i{width:18px;height:18px;border:3px solid var(--line);border-top-color:var(--red);border-radius:50%;animation:sp 0.8s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.hide{display:none!important}
+footer{color:var(--mut);font-size:11.5px;text-align:center;margin-top:40px}
+@media(max-width:900px){.verdict{grid-template-columns:1fr 1fr}.cards{grid-template-columns:1fr}header{flex-wrap:wrap}.tabs{margin-left:0}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="logo"><i></i></div>
+  <div><h1>Buscador de <span>Nichos</span></h1><div class="sub">Canais pequenos com vídeos bombando = nicho com demanda</div></div>
+  <div class="tabs">
+    <button class="tab" data-tab="desc">✨ Canais novos</button>
+    <button class="tab" data-tab="buscar">🔎 Buscar</button>
+    <button class="tab" data-tab="favs">⭐ Favoritos <span id="favN"></span></button>
+    <button class="tab keytab" data-tab="chave">🔑 Colocar chave API</button>
+    <button class="tab" data-tab="ajuda">❓ Como ler</button>
+  </div>
+  <div class="quota" title="Limite grátis do Google: 10.000 unidades por dia (zera às 4h/5h de Brasília). Cada busca gasta ~102 unidades por página.">
+    <div class="qbar"><b id="qb"></b></div><span id="qt">—</span>
+  </div>
+</header>
+
+<!-- BUSCAR -->
+<section id="t-buscar" class="hide">
+  <div class="panel">
+    <div class="row">
+      <label class="f">Categoria
+        <select id="cat"><option value="">📂 Todas / escolher...</option></select></label>
+      <div class="big"><label class="f">Tema ou palavra-chave
+        <input id="q" placeholder="ex.: curiosidades de história, animais estranhos, true crime..." autocomplete="off"></label>
+        <div class="sug" id="sug"></div>
+        <label class="anyq"><input type="checkbox" id="anyQ"> Qualquer tema</label>
+      </div>
+      <div class="brk"></div>
+      <label class="f">Idioma / país
+        <select id="lang">
+          <option value="pt|BR">🇧🇷 Português (Brasil)</option>
+          <option value="en|US">🇺🇸 Inglês (EUA)</option>
+          <option value="es|MX">🇲🇽 Espanhol (México)</option>
+          <option value="es|ES">🇪🇸 Espanhol (Espanha)</option>
+          <option value="de|DE">🇩🇪 Alemão</option>
+          <option value="fr|FR">🇫🇷 Francês</option>
+          <option value="it|IT">🇮🇹 Italiano</option>
+          <option value="|">🌎 Qualquer</option>
+        </select></label>
+      <label class="f">Publicados nos últimos
+        <select id="period">
+          <option value="7">7 dias</option><option value="10">10 dias</option><option value="15">15 dias</option><option value="20">20 dias</option><option value="30" selected>30 dias</option><option value="90">3 meses</option><option value="180">6 meses</option><option value="365">1 ano</option>
+        </select></label>
+      <label class="f">Duração
+        <select id="dur">
+          <option value="long">Longos (+20 min)</option><option value="medium">Médios (4–20 min)</option><option value="any" selected>Qualquer</option><option value="short">Curtos / Shorts (-4 min)</option>
+        </select></label>
+      <label class="f">Profundidade
+        <select id="pages">
+          <option value="30" selected>30 vídeos</option><option value="20">20 vídeos</option><option value="15">15 vídeos</option><option value="10">10 vídeos</option><option value="40">Qualquer (máx. 40)</option>
+        </select></label>
+      <label class="f">Mostrar
+        <select id="order"><option value="relevance" selected>Mais canais pequenos</option><option value="viewCount">Só os mais vistos</option></select></label>
+      <button class="btn" id="go">Buscar nicho</button>
+    </div>
+    <div class="chips" id="chips"></div>
+    <div class="filters">
+      <label>Máx. inscritos <input type="number" id="fSubs" value="100000" step="1000"></label>
+      <label>Mín. views do vídeo <input type="number" id="fViews" value="10000" step="1000"></label>
+      <label>Canal criado há no máx. <select id="fAge"><option value="90">3 meses</option><option value="60">2 meses</option><option value="30">1 mês</option><option value="20">20 dias</option><option value="15">15 dias</option><option value="10">10 dias</option><option value="0" selected>qualquer</option></select></label>
+      <label><input type="checkbox" id="fNoShorts"> Esconder Shorts</label>
+      <label>Ordenar <select id="sort"><option value="score">Nota de nicho</option><option value="mult">Views ÷ inscritos</option><option value="views">Views do vídeo</option><option value="vpd">Views por dia</option><option value="young">Canal mais novo</option></select></label>
+      <span style="margin-left:auto;display:flex;gap:6px">
+        <button class="btn2" id="csv">⬇ Exportar CSV</button>
+        <button class="btn2" id="ideas">💡 Gerar 30 ideias com IA</button>
+      </span>
+    </div>
+    <div class="hint">Filtros e ordenação não gastam cota. Buscas repetidas em até 6 h saem do cache, de graça.</div>
+    <div class="msg" id="msg"></div>
+  </div>
+  <div class="loader" id="loader"><i></i><span id="lt">Buscando...</span></div>
+  <div id="verdict"></div>
+  <div class="cards" id="cards"></div>
+  <div class="empty" id="empty"><h2>Digite um tema e clique em Buscar nicho</h2>Dica: comece amplo (“história”, “animais”) e depois afunile com as sugestões que aparecem enquanto você digita.</div>
+</section>
+
+<!-- FAVORITOS -->
+<section id="t-desc" class="hide">
+  <div class="dhead">
+    <div><h2>✨ Canais novos bombando</h2>
+    <div class="sub">📡 Lista atualizada todo dia pelo Radar, sem gastar sua cota. Canais com o <b>1º vídeo há no máx. 90 dias</b>, até 15 vídeos e 20 mil+ views.</div></div>
+    <div class="row" style="gap:8px">
+    <select id="dniche"></select>
+    <select id="dlang"><option value="pt|BR">🇧🇷 Português</option><option value="en|US">🇺🇸 Inglês</option><option value="es|MX">🇲🇽 Espanhol</option><option value="de|DE">🇩🇪 Alemão</option><option value="fr|FR">🇫🇷 Francês</option></select>
+    <label class="chk"><input type="checkbox" id="dNoShorts"> Esconder Shorts</label>
+    <button class="btn" id="dref">🔎 Procurar canais novos</button></div>
+  </div>
+  <div class="msg" id="dmsg"></div>
+  <div class="loader" id="dload"><i></i><span id="dlt">Procurando canais novos...</span></div>
+  <div class="cards" id="dcards"></div>
+  <p class="hint" style="margin-top:16px"><a href="#" id="goKey">🔑 Colocar / trocar chave API e ver o passo a passo</a> · Os canais achados ficam salvos neste navegador: reabrir não gasta nada. Cada clique gasta no máximo ~320 unidades (3% da cota): dá umas 30 procuras por dia.</p>
+</section>
+
+<section id="t-favs" class="hide">
+  <div class="row" style="margin-bottom:14px"><button class="btn2" id="favCsv">⬇ Exportar favoritos (CSV)</button><button class="btn2" id="favClr">Limpar favoritos</button></div>
+  <div class="cards" id="favCards"></div>
+  <div class="empty" id="favEmpty"><h2>Nenhum favorito ainda</h2>Clique em ☆ Salvar nos cards para guardar canais aqui.</div>
+</section>
+
+<!-- CHAVE -->
+<section id="t-chave" class="hide">
+  <div class="panel keybox">
+    <h2>🔑 Sua chave grátis da API do YouTube</h2>
+    <p class="sub" style="font-size:13.5px">O buscador usa a SUA chave do Google, que é grátis e dá ~95 buscas rápidas por dia. Ela fica salva só neste navegador e vai direto para o Google, sem passar por nenhum servidor nosso.</p>
+    <ol class="steps">
+      <li>Abra o <a href="https://console.cloud.google.com/projectcreate" target="_blank"><b>Google Cloud Console</b></a> com sua conta Google e crie um projeto (ex.: “Buscador de Nichos”).</li>
+      <li>Abra a <a href="https://console.cloud.google.com/apis/library/youtube.googleapis.com" target="_blank"><b>YouTube Data API v3</b></a> com o projeto selecionado e clique em <b>Ativar</b>.</li>
+      <li>Vá em <a href="https://console.cloud.google.com/apis/credentials" target="_blank"><b>Credenciais</b></a> → <b>+ Criar credenciais</b> → <b>Chave de API</b>.</li>
+      <li>Copie a chave (começa com <b>AIza…</b>), cole abaixo e clique em <b>Salvar e testar</b>.</li>
+    </ol>
+    <label class="f" style="margin-top:6px">Cole sua chave API aqui</label>
+    <div class="krow"><input id="key" type="password" placeholder="AIza..."><button class="btn2" id="showKey">👁</button><button class="btn" id="saveKey">Salvar e testar</button></div>
+    <div class="msg" id="kmsg"></div>
+    <p class="sub" style="margin-top:18px">Não precisa de cartão de crédito. Tem dúvida? Assista ao passo a passo em vídeo:</p>
+    <video id="tut" controls preload="metadata" src="Como criar sua chave.mp4" style="width:100%;border-radius:12px;margin:10px 0 4px;background:#000;border:1px solid var(--line)"></video>
+    <p class="hint" id="tutMiss" style="display:none">Vídeo não encontrado: deixe o arquivo <b>“Como criar sua chave.mp4”</b> na mesma pasta deste buscador.</p>
+    <p class="hint">🔒 Dica de segurança: no Console, em Credenciais → sua chave → <b>Restrições de API</b>, marque só “YouTube Data API v3”.</p>
+  </div>
+</section>
+
+<!-- AJUDA -->
+<section id="t-ajuda" class="hide">
+  <div class="panel keybox">
+    <h2>Como ler os resultados</h2>
+    <p class="sub" style="font-size:13.5px">O buscador acha os vídeos mais vistos do período e mostra quem são os canais por trás deles. O que interessa são <b>canais pequenos com vídeos grandes</b>.</p>
+    <table class="leg">
+      <tr><td><b>Nota de nicho (0–100)</b></td><td>Combina views ÷ inscritos (até 40 pts), canal pequeno (até 25), canal novo (até 20) e velocidade do vídeo em views por dia (até 15).</td></tr>
+      <tr><td><span class="pill g">VERDE</span> 65+</td><td>Sinal forte: canal pequeno ou novo explodindo. Estude o formato.</td></tr>
+      <tr><td><span class="pill y">AMARELO</span> 40–64</td><td>Funciona, mas tem concorrência ou o canal já é médio.</td></tr>
+      <tr><td><span class="pill r">VERMELHO</span> &lt;40</td><td>Canal grande ou vídeo fraco. Não prova que o nicho é aberto.</td></tr>
+      <tr><td><b>Views ÷ inscritos</b></td><td>Views do melhor vídeo dividido pelos inscritos. Acima de 5× = o algoritmo está empurrando para quem não é inscrito.</td></tr>
+      <tr><td><b>Canal criado</b></td><td>Data de criação da conta do canal. Às vezes a conta é antiga e os vídeos são recentes.</td></tr>
+      <tr><td><b>Veredito do nicho</b></td><td><b>3 ou mais canais VERDES</b> = nicho validado. 1–2 = dá para entrar com ângulo diferente. 0 = só gigantes, procure outro.</td></tr>
+    </table>
+    <h2 style="margin-top:20px">Quanto gasta da cota</h2>
+    <table class="leg">
+      <tr><td>Busca de 10, 15, 20, 30 ou 40 vídeos</td><td>~102 unidades (o Google cobra 100 por pesquisa, com 10 ou 40 vídeos)</td></tr>
+      <tr><td>✨ Canais novos (1 clique em Procurar)</td><td>até ~320 unidades (3 pesquisas no nicho escolhido; para antes se achar 10). Só gasta quando você clica. Os achados ficam salvos e reabrir é grátis.</td></tr>
+      <tr><td>Limite grátis por dia</td><td>10.000 unidades (zera de madrugada, horário do Pacífico)</td></tr>
+    </table>
+    <p class="hint">O contador no topo é uma estimativa feita neste navegador. O número oficial fica no Google Cloud Console → APIs e serviços → Cotas.</p>
+  </div>
+</section>
+<footer>Buscador de Nichos · dados públicos da YouTube Data API v3 · sua chave fica só no seu navegador</footer>
+</div>
+
+<script>
+const $ = s => document.querySelector(s);
+const LS = {get:(k,d)=>{try{return JSON.parse(localStorage.getItem('bn_'+k))??d}catch(e){return d}}, set:(k,v)=>localStorage.setItem('bn_'+k,JSON.stringify(v))};
+const API = 'https://www.googleapis.com/youtube/v3/';
+let RESULTS = [], LASTQ = '';
+
+/* ---------- abas ---------- */
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
+function showTab(t){document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x.dataset.tab===t));
+  ['desc','buscar','favs','chave','ajuda'].forEach(x=>$('#t-'+x).classList.toggle('hide',x!==t)); if(t==='favs')renderFavs();}
+
+/* ---------- cota (dia do Pacífico) ---------- */
+function pday(){return new Date(Date.now()-8*3600e3).toISOString().slice(0,10)}
+function quotaUsed(){const q=LS.get('quota',{});return q.day===pday()?q.used:0}
+function addQuota(n){LS.set('quota',{day:pday(),used:quotaUsed()+n});drawQuota()}
+function drawQuota(){const u=quotaUsed(),left=Math.max(0,10000-u);
+  $('#qb').style.width=Math.min(100,u/100)+'%';$('#qb').style.background=u>8000?'var(--red)':u>5000?'var(--yel)':'var(--grn)';
+  $('#qt').textContent=`${u.toLocaleString('pt-BR')} / 10.000 · ~${Math.floor(left/102)} buscas`+(LS.get('sblock','')===pday()?' · ⛔ pesquisas bloqueadas hoje':'');}
+drawQuota();
+
+/* ---------- chave ---------- */
+$('#key').value=LS.get('key','');
+$('#tut').onerror=()=>{$('#tut').style.display='none';$('#tutMiss').style.display='block'};
+$('#goKey').onclick=e=>{e.preventDefault();showTab('chave')};
+$('#showKey').onclick=()=>{$('#key').type=$('#key').type==='password'?'text':'password'};
+$('#saveKey').onclick=async()=>{const k=$('#key').value.trim();const m=$('#kmsg');
+  if(!/^AIza[\w-]{30,}$/.test(k)){m.className='msg err';m.textContent='Isso não parece uma chave de API. Ela começa com “AIza” e tem ~39 caracteres.';return}
+  m.className='msg info';m.textContent='Testando...';
+  try{await yt('channels',{part:'snippet',id:'UC_x5XG1OV2P6uZZ5FSM9Ttw'},1,k);LS.set('key',k);m.className='msg ok';m.textContent='✅ Chave funcionando! Já pode buscar nichos.';setTimeout(()=>{showTab('desc');discover()},900)}
+  catch(e){m.className='msg err';m.innerHTML=e.message}};
+showTab('desc');setTimeout(discover,50);
+
+/* ---------- API ---------- */
+async function yt(ep,params,cost,keyOverride){
+  const key=keyOverride||LS.get('key','');
+  if(!key){showTab('chave');throw new Error('Cadastre sua chave primeiro (aba 🔑 Minha chave).')}
+  const u=new URL(API+ep);Object.entries(params).forEach(([k,v])=>v!==''&&v!=null&&u.searchParams.set(k,v));u.searchParams.set('key',key);
+  let r;try{r=await fetch(u)}catch(e){throw new Error('Sem conexão com o Google. Confira sua internet.')}
+  const j=await r.json();
+  if(!j.error)addQuota(cost);
+  if(j.error){const reason=(j.error.errors&&j.error.errors[0]&&j.error.errors[0].reason)||'';const st=j.error.status||'';
+    const M={keyInvalid:'Chave inválida. Copie de novo no Google Cloud Console (Credenciais).',API_KEY_INVALID:'Chave inválida. Copie de novo no Google Cloud Console (Credenciais).',
+      quotaExceeded:'A cota grátis de hoje acabou. Ela volta de madrugada (horário de Brasília ~4h/5h).',
+      accessNotConfigured:'A YouTube Data API v3 não está ativada neste projeto. <a target="_blank" href="https://console.cloud.google.com/apis/library/youtube.googleapis.com">Clique aqui e em Ativar</a>, espere 1 minuto e tente de novo.',
+      SERVICE_DISABLED:'A YouTube Data API v3 não está ativada neste projeto. <a target="_blank" href="https://console.cloud.google.com/apis/library/youtube.googleapis.com">Clique aqui e em Ativar</a>, espere 1 minuto e tente de novo.',
+      ipRefererBlocked:'Sua chave tem restrição de site/IP. No Console, em Credenciais → chave → Restrições do aplicativo, escolha “Nenhuma”.',
+      API_KEY_HTTP_REFERRER_BLOCKED:'Sua chave tem restrição de site. No Console, em Credenciais → chave → Restrições do aplicativo, escolha “Nenhuma”.'};
+    const det=(j.error.details||[]).map(d=>d.reason).find(x=>M[x]);
+    if(/Search Queries/i.test(j.error.message||'')){LS.set('sblock',pday());drawQuota();throw new Error('O Google bloqueou as <b>pesquisas</b> de hoje nesta chave. É um limite separado das 10.000 unidades: o contador não acabou. Volta de madrugada (~4h/5h de Brasília). Os canais salvos e os favoritos continuam funcionando. Ver o limite no <a target="_blank" href="https://console.cloud.google.com/apis/api/youtube.googleapis.com/quotas">Google Cloud Console → Cotas</a>.')}
+    if(/quota|dailyLimit|rateLimit/i.test(reason)||st==='RESOURCE_EXHAUSTED'||/quota exceeded/i.test(j.error.message||'')){LS.set('quota',{day:pday(),used:10000});drawQuota();throw new Error(M.quotaExceeded)}
+    if(reason==='quotaExceeded')LS.set('quota',{day:pday(),used:10000}),drawQuota();
+    throw new Error(M[reason]||M[det]||M[st]||('Erro do Google: '+j.error.message))}
+  return j;
+}
+
+/* ---------- sugestões (autocompletar do YouTube) ---------- */
+let sugT,sugI=-1;
+$('#q').addEventListener('input',()=>{clearTimeout(sugT);const v=$('#q').value.trim();if(v.length<2){$('#sug').style.display='none';return}
+  sugT=setTimeout(()=>{const hl=$('#lang').value.split('|')[0]||'pt';const cb='sg'+Date.now();
+    window[cb]=d=>{delete window[cb];s.remove();const L=(d[1]||[]).map(x=>Array.isArray(x)?x[0]:x).slice(0,8);
+      $('#sug').innerHTML=L.map(x=>`<div>${esc(x)}</div>`).join('');$('#sug').style.display=L.length?'block':'none';sugI=-1;
+      $('#sug').querySelectorAll('div').forEach(el=>el.onmousedown=()=>{$('#q').value=el.textContent;$('#sug').style.display='none'})};
+    const s=document.createElement('script');s.src=`https://suggestqueries.google.com/complete/search?client=youtube&ds=yt&hl=${hl}&oe=utf-8&q=${encodeURIComponent(v)}&callback=${cb}`;s.onerror=()=>{delete window[cb];s.remove()};document.body.appendChild(s)},220)});
+$('#q').addEventListener('keydown',e=>{const it=[...$('#sug').querySelectorAll('div')];
+  if(e.key==='ArrowDown'||e.key==='ArrowUp'){if(!it.length)return;e.preventDefault();sugI=(sugI+(e.key==='ArrowDown'?1:-1)+it.length)%it.length;it.forEach((x,i)=>x.classList.toggle('on',i===sugI))}
+  else if(e.key==='Enter'){if(sugI>=0&&it[sugI])$('#q').value=it[sugI].textContent;$('#sug').style.display='none';search()}
+  else if(e.key==='Escape')$('#sug').style.display='none'});
+$('#q').addEventListener('blur',()=>setTimeout(()=>$('#sug').style.display='none',150));
+
+/* ---------- busca ---------- */
+$('#go').onclick=search;$('#order').value=LS.get('order','relevance');
+/* ---------- categorias ---------- */
+const NICHOS=[["Conhecimento","📜","História",{"pt":["história","curiosidades da história","história do brasil"],"en":["history documentary","history facts"],"es":["historia","curiosidades de la historia"],"de":["geschichte doku"],"fr":["histoire documentaire"],"it":["storia documentario"]}],["Conhecimento","🏛️","Roma e Antiguidade",{"pt":["império romano","roma antiga"],"en":["ancient rome","roman empire"],"es":["imperio romano","roma antigua"],"de":["römisches reich"],"fr":["empire romain"],"it":["impero romano"]}],["Conhecimento","⚔️","Guerras e Militar",{"pt":["segunda guerra mundial","guerra documentário"],"en":["ww2 documentary","military history"],"es":["segunda guerra mundial"],"de":["zweiter weltkrieg doku"],"fr":["seconde guerre mondiale"],"it":["seconda guerra mondiale"]}],["Conhecimento","🏺","Mistérios e Arqueologia",{"pt":["mistérios da história","civilizações antigas"],"en":["unexplained mysteries","ancient civilizations"],"es":["misterios sin resolver","civilizaciones antiguas"],"de":["ungelöste rätsel"],"fr":["mystères de l'histoire"],"it":["misteri irrisolti"]}],["Conhecimento","🌌","Espaço e Universo",{"pt":["universo","espaço sideral","buracos negros"],"en":["space documentary","black holes"],"es":["el universo","espacio exterior"],"de":["universum doku"],"fr":["univers documentaire"],"it":["universo documentario"]}],["Conhecimento","🔬","Ciência",{"pt":["ciência explicada","experimentos científicos"],"en":["science explained","how it works"],"es":["ciencia explicada"],"de":["wissenschaft erklärt"],"fr":["science expliquée"],"it":["scienza spiegata"]}],["Conhecimento","💡","Curiosidades",{"pt":["curiosidades","você sabia","fatos curiosos"],"en":["interesting facts","did you know"],"es":["curiosidades","sabías que"],"de":["fakten die du nicht kennst"],"fr":["le saviez-vous"],"it":["curiosità"]}],["Conhecimento","🌍","Países e Geografia",{"pt":["como é viver em","países mais pobres do mundo"],"en":["life in","geography explained"],"es":["así se vive en"],"de":["so lebt man in"],"fr":["la vie en"],"it":["come si vive in"]}],["Conhecimento","🏗️","Engenharia e Construção",{"pt":["megaconstruções","engenharia"],"en":["megaprojects","engineering explained"],"es":["megaconstrucciones"],"de":["megabauten doku"],"fr":["mégaconstructions"],"it":["megastrutture"]}],["Natureza","🐾","Animais",{"pt":["animais selvagens","animais estranhos","documentário animais"],"en":["wildlife documentary","strangest animals"],"es":["animales salvajes","animales raros"],"de":["tierdoku"],"fr":["animaux sauvages"],"it":["animali selvaggi"]}],["Natureza","🐶","Cães e Pets",{"pt":["cachorros","raças de cachorro","gatos engraçados"],"en":["dog breeds","funny cats"],"es":["perros","razas de perros"],"de":["hunde"],"fr":["chiens"],"it":["cani"]}],["Natureza","🌊","Oceano",{"pt":["fundo do mar","criaturas do oceano"],"en":["deep sea creatures","ocean documentary"],"es":["fondo del mar"],"de":["tiefsee doku"],"fr":["fond des océans"],"it":["fondali marini"]}],["Natureza","🦖","Dinossauros e Pré-história",{"pt":["dinossauros","animais pré-históricos"],"en":["dinosaurs documentary","prehistoric animals"],"es":["dinosaurios"],"de":["dinosaurier doku"],"fr":["dinosaures"],"it":["dinosauri"]}],["Natureza","🌋","Desastres e Tragédias",{"pt":["desastres naturais","tragédias reais"],"en":["disaster documentary","worst disasters"],"es":["desastres naturales"],"de":["katastrophen doku"],"fr":["catastrophes naturelles"],"it":["disastri naturali"]}],["Natureza","🏕️","Sobrevivência e Bushcraft",{"pt":["sobrevivência na selva","bushcraft"],"en":["survival","bushcraft"],"es":["supervivencia"],"de":["überleben in der wildnis"],"fr":["survie"],"it":["sopravvivenza"]}],["Pessoas","🕵️","True Crime",{"pt":["casos reais","crimes reais","caso não resolvido"],"en":["true crime","unsolved cases"],"es":["casos reales","crímenes reales"],"de":["true crime deutsch"],"fr":["affaires criminelles"],"it":["casi di cronaca"]}],["Pessoas","👻","Terror e Paranormal",{"pt":["histórias de terror","relatos paranormais"],"en":["scary stories","paranormal"],"es":["historias de terror"],"de":["gruselgeschichten"],"fr":["histoires d'horreur"],"it":["storie horror"]}],["Pessoas","📖","Bíblia e Religião",{"pt":["histórias da bíblia","bíblia explicada"],"en":["bible stories","bible explained"],"es":["historias de la biblia"],"de":["bibel geschichten"],"fr":["histoires bibliques"],"it":["storie della bibbia"]}],["Pessoas","🧠","Psicologia e Comportamento",{"pt":["psicologia","fatos psicológicos"],"en":["psychology facts","dark psychology"],"es":["psicología","datos psicológicos"],"de":["psychologie fakten"],"fr":["psychologie"],"it":["psicologia"]}],["Pessoas","🔥","Motivação e Mentalidade",{"pt":["motivação","disciplina","estoicismo"],"en":["motivation","stoicism"],"es":["motivación","estoicismo"],"de":["motivation deutsch"],"fr":["motivation"],"it":["motivazione"]}],["Pessoas","⭐","Famosos e Biografias",{"pt":["o que aconteceu com","biografia"],"en":["what happened to","biography"],"es":["qué pasó con","biografía"],"de":["was wurde aus"],"fr":["que sont-ils devenus"],"it":["che fine ha fatto"]}],["Pessoas","📚","Histórias e Contos",{"pt":["histórias para dormir","contos"],"en":["bedtime stories","story time"],"es":["cuentos para dormir"],"de":["gute nacht geschichten"],"fr":["histoires pour dormir"],"it":["storie della buonanotte"]}],["Dinheiro","💰","Finanças e Investimentos",{"pt":["finanças pessoais","como investir"],"en":["personal finance","investing for beginners"],"es":["finanzas personales"],"de":["finanzen"],"fr":["finances personnelles"],"it":["finanza personale"]}],["Dinheiro","💼","Negócios e Empreendedorismo",{"pt":["empreendedorismo","história de empresas"],"en":["business stories","how companies make money"],"es":["emprendimiento"],"de":["unternehmen geschichte"],"fr":["entrepreneuriat"],"it":["imprenditoria"]}],["Dinheiro","💻","Renda Extra e Online",{"pt":["renda extra","ganhar dinheiro na internet"],"en":["make money online","side hustle"],"es":["ganar dinero por internet"],"de":["online geld verdienen"],"fr":["gagner de l'argent en ligne"],"it":["guadagnare online"]}],["Dinheiro","🤖","Tecnologia e IA",{"pt":["inteligência artificial","tecnologia"],"en":["artificial intelligence","tech explained"],"es":["inteligencia artificial"],"de":["künstliche intelligenz"],"fr":["intelligence artificielle"],"it":["intelligenza artificiale"]}],["Entretenimento","🎮","Games",{"pt":["jogos","curiosidades de games"],"en":["gaming","video game facts"],"es":["videojuegos"],"de":["gaming deutsch"],"fr":["jeux vidéo"],"it":["videogiochi"]}],["Entretenimento","🕹️","Games Retrô",{"pt":["jogos antigos","jogos retrô"],"en":["retro games","old games"],"es":["juegos retro"],"de":["retro spiele"],"fr":["jeux rétro"],"it":["giochi retro"]}],["Entretenimento","🎬","Filmes e Séries",{"pt":["filmes explicados","resumo de filme"],"en":["movie explained","movie recap"],"es":["películas explicadas","resumen de película"],"de":["film erklärt"],"fr":["film expliqué"],"it":["film spiegato"]}],["Entretenimento","🍥","Anime e Mangá",{"pt":["anime","resumo de anime"],"en":["anime explained","anime recap"],"es":["anime resumen"],"de":["anime deutsch"],"fr":["anime résumé"],"it":["anime riassunto"]}],["Entretenimento","🦸","Super-heróis e Geek",{"pt":["marvel","dc comics","curiosidades geek"],"en":["marvel explained","superheroes"],"es":["marvel explicado"],"de":["marvel deutsch"],"fr":["marvel expliqué"],"it":["marvel spiegato"]}],["Entretenimento","📊","Rankings e Top 10",{"pt":["top 10","os mais perigosos do mundo"],"en":["top 10","most dangerous"],"es":["top 10","los más peligrosos"],"de":["top 10"],"fr":["top 10"],"it":["top 10"]}],["Entretenimento","😂","Humor e Desenhos",{"pt":["animação engraçada","desenho animado"],"en":["funny animation","cartoon"],"es":["animación graciosa"],"de":["lustige animation"],"fr":["animation drôle"],"it":["animazione divertente"]}],["Entretenimento","🎧","Música e Relax",{"pt":["música relaxante","lofi"],"en":["relaxing music","lofi"],"es":["música relajante"],"de":["entspannungsmusik"],"fr":["musique relaxante"],"it":["musica rilassante"]}],["Estilo de vida","🩺","Saúde e Corpo",{"pt":["saúde","corpo humano"],"en":["health tips","human body"],"es":["salud","cuerpo humano"],"de":["gesundheit"],"fr":["santé"],"it":["salute"]}],["Estilo de vida","💪","Fitness",{"pt":["treino em casa","emagrecer"],"en":["home workout","weight loss"],"es":["ejercicio en casa"],"de":["workout zuhause"],"fr":["sport à la maison"],"it":["allenamento a casa"]}],["Estilo de vida","🍳","Culinária",{"pt":["receitas fáceis","comida de rua"],"en":["easy recipes","street food"],"es":["recetas fáciles"],"de":["einfache rezepte"],"fr":["recettes faciles"],"it":["ricette facili"]}],["Estilo de vida","✈️","Viagem",{"pt":["viagem","lugares incríveis"],"en":["travel vlog","amazing places"],"es":["viajes","lugares increíbles"],"de":["reisen"],"fr":["voyage"],"it":["viaggi"]}],["Estilo de vida","🛠️","Faça Você Mesmo",{"pt":["faça você mesmo","restauração"],"en":["diy","restoration"],"es":["hazlo tú mismo","restauración"],"de":["diy deutsch"],"fr":["bricolage"],"it":["fai da te"]}],["Estilo de vida","🚗","Carros",{"pt":["carros","carros antigos"],"en":["cars explained","car restoration"],"es":["autos","coches"],"de":["autos"],"fr":["voitures"],"it":["auto"]}],["Estilo de vida","⚽","Esportes",{"pt":["futebol","histórias do futebol"],"en":["football stories","sports documentary"],"es":["fútbol","historias del fútbol"],"de":["fußball"],"fr":["football"],"it":["calcio"]}],["Estilo de vida","🧸","Infantil",{"pt":["desenho infantil","histórias infantis"],"en":["kids songs","kids stories"],"es":["cuentos infantiles"],"de":["kinder geschichten"],"fr":["histoires pour enfants"],"it":["storie per bambini"]}]];
+(function(){const sel=$('#cat');let g='',og;NICHOS.forEach((n,i)=>{if(n[0]!==g){g=n[0];og=document.createElement('optgroup');og.label=g;sel.appendChild(og)}
+  const o=document.createElement('option');o.value=i;o.textContent=n[1]+' '+n[2];og.appendChild(o)})})();
+function catKws(){const i=$('#cat').value;if(i==='')return[];const l=$('#lang').value.split('|')[0]||'pt';const k=NICHOS[i][3];return k[l]||k.en}
+function drawChips(){const L=catKws(),c=$('#chips');c.classList.toggle('on',!!L.length);
+  c.innerHTML=L.length?'<span>Palavras do nicho:</span>'+L.map(k=>`<button type="button"${k===$('#q').value?' class="on"':''}>${esc(k)}</button>`).join(''):'';
+  c.querySelectorAll('button').forEach(b=>b.onclick=()=>{$('#q').value=b.textContent;drawChips()})}
+function pickCat(){const L=catKws();LS.set('cat',$('#cat').value);if(L.length){$('#anyQ').checked=false;anyQ();$('#q').value=L[0]}drawChips()}
+$('#cat').onchange=pickCat;
+$('#lang').addEventListener('change',()=>{if($('#cat').value!=='')pickCat()});
+$('#q').addEventListener('input',()=>{if($('#chips').classList.contains('on'))$('#chips').querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.textContent===$('#q').value))});
+$('#cat').value=LS.get('cat','');drawChips();
+const QPH=$('#q').placeholder;
+function anyQ(){const on=$('#anyQ').checked;if(on&&$('#cat')){$('#cat').value='';LS.set('cat','');$('#chips').classList.remove('on')}$('#q').disabled=on;$('#q').placeholder=on?'Todos os assuntos':QPH;if(on)$('#sug').style.display='none';LS.set('anyq',on)}
+$('#anyQ').checked=LS.get('anyq',false);$('#anyQ').onchange=anyQ;anyQ();
+async function search(){
+  const any=$('#anyQ').checked,q=any?'':$('#q').value.trim();if(!any&&!q){$('#q').focus();return}
+  const [lang,region]=$('#lang').value.split('|');const days=+$('#period').value,dur=$('#dur').value,nvid=+$('#pages').value,pages=Math.ceil(nvid/50);
+  const order=$('#order').value;LS.set('order',order);const ck=[any?'*':q.toLowerCase(),lang,region,days,dur,nvid,order].join('|');const cache=LS.get('cache',{});
+  msg('');LASTQ=any?'qualquer tema':q;
+  if(cache[ck]&&Date.now()-cache[ck].t<6*3600e3){RESULTS=cache[ck].r;render();msg('info','Resultado do cache (busca feita há menos de 6 h), sem gastar cota.');return}
+  $('#go').disabled=true;$('#loader').style.display='flex';$('#empty').classList.add('hide');$('#cards').innerHTML='';$('#verdict').innerHTML='';
+  try{
+    const after=new Date(Date.now()-days*864e5).toISOString().replace(/\.\d+Z/,'Z');
+    let vids=[],tok='';
+    for(let p=0;p<pages;p++){
+      lt(`Buscando ${nvid} vídeos...${pages>1?` (página ${p+1}/${pages})`:''}`);
+      const s=await yt('search',{part:'snippet',type:'video',q,order,publishedAfter:after,maxResults:Math.min(50,nvid-vids.length),relevanceLanguage:lang,regionCode:region,videoDuration:dur,pageToken:tok,safeSearch:'none'},100);
+      vids.push(...s.items.map(i=>i.id.videoId));tok=s.nextPageToken;if(!tok||vids.length>=nvid)break}
+    vids=[...new Set(vids)];
+    if(!vids.length)throw new Error('Nenhum vídeo encontrado. Tente um tema mais amplo, outro idioma ou um período maior.');
+    lt('Lendo estatísticas dos vídeos...');
+    const V=[];for(let i=0;i<vids.length;i+=50){const r=await yt('videos',{part:'snippet,statistics,contentDetails',id:vids.slice(i,i+50).join(',')},1);V.push(...r.items)}
+    const chIds=[...new Set(V.map(v=>v.snippet.channelId))];
+    lt(`Analisando ${chIds.length} canais...`);
+    const C={};for(let i=0;i<chIds.length;i+=50){const r=await yt('channels',{part:'snippet,statistics',id:chIds.slice(i,i+50).join(',')},1);r.items.forEach(c=>C[c.id]=c)}
+    RESULTS=build(V,C);
+    cache[ck]={t:Date.now(),r:RESULTS};Object.keys(cache).forEach(k=>{if(Date.now()-cache[k].t>6*3600e3)delete cache[k]});
+    try{LS.set('cache',cache)}catch(e){LS.set('cache',{})}
+    render();
+  }catch(e){msg('err',e.message);$('#empty').classList.remove('hide')}
+  finally{$('#go').disabled=false;$('#loader').style.display='none'}
+}
+function lt(t){$('#lt').textContent=t}
+function msg(c,t){const m=$('#msg');m.className=c?'msg '+c:'msg';m.innerHTML=t||''}
+
+function secs(d){const m=/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/.exec(d||'')||[];return (+m[1]||0)*3600+(+m[2]||0)*60+(+m[3]||0)}
+function build(V,C){
+  const by={};const now=Date.now();
+  V.forEach(v=>{const c=C[v.snippet.channelId];if(!c)return;const views=+(v.statistics.viewCount||0);
+    const s=secs(v.contentDetails&&v.contentDetails.duration);const vd=Math.max(1,(now-new Date(v.snippet.publishedAt))/864e5);
+    const vo={id:v.id,title:v.snippet.title,thumb:(v.snippet.thumbnails.medium||v.snippet.thumbnails.default).url,views,secs:s,short:s>0&&s<=180,date:v.snippet.publishedAt,vpd:views/vd};
+    const e=by[c.id]||(by[c.id]={id:c.id,name:c.snippet.title,handle:c.snippet.customUrl||'',avatar:(c.snippet.thumbnails.default||{}).url,
+      created:c.snippet.publishedAt,country:c.snippet.country||'',hidden:!!c.statistics.hiddenSubscriberCount,subs:+(c.statistics.subscriberCount||0),
+      total:+(c.statistics.viewCount||0),nvid:+(c.statistics.videoCount||0),vids:[]});
+    e.vids.push(vo)});
+  return Object.values(by).map(e=>{e.vids.sort((a,b)=>b.views-a.views);const b=e.vids[0];
+    e.best=b.views;e.vpd=b.vpd;e.age=Math.max(1,(now-new Date(e.created))/864e5);
+    e.mult=e.hidden||!e.subs?null:b.views/e.subs;e.avg=e.nvid?e.total/e.nvid:0;e.score=score(e);return e});
+}
+function score(e){
+  const m=e.mult==null?3:e.mult;
+  const s1=Math.max(0,Math.min(40,Math.log10(Math.max(m,1))/Math.log10(50)*40));
+  const s2=e.hidden?8:e.subs<1e3?25:e.subs<1e4?20:e.subs<5e4?12:e.subs<1e5?6:0;
+  const s3=e.age<=90?20:e.age<=365?14:e.age<=730?8:2;
+  const s4=Math.max(0,Math.min(15,Math.log10(Math.max(e.vpd,1))/5*15));
+  return Math.round(s1+s2+s3+s4);
+}
+const sig=s=>s>=65?['g','VERDE','#2ecc71']:s>=40?['y','AMARELO','#ffc93c']:['r','VERMELHO','#ff3b3b'];
+
+function filtered(list){
+  const ms=+$('#fSubs').value||Infinity,mv=+$('#fViews').value||0,ma=+$('#fAge').value,ns=$('#fNoShorts').checked;
+  let L=list.map(e=>{const vids=ns?e.vids.filter(v=>!v.short):e.vids;if(!vids.length)return null;
+      const x={...e,vids};const b=vids[0];x.best=b.views;x.vpd=b.vpd;x.mult=x.hidden||!x.subs?null:b.views/x.subs;x.score=score(x);return x}).filter(Boolean)
+    .filter(e=>(e.hidden||e.subs<=ms)&&e.best>=mv&&(!ma||e.age<=ma));
+  const k=$('#sort').value;
+  const f={score:e=>e.score,mult:e=>e.mult||0,views:e=>e.best,vpd:e=>e.vpd,young:e=>-e.age}[k];
+  return L.sort((a,b)=>f(b)-f(a));
+}
+['fSubs','fViews','fAge','fNoShorts','sort'].forEach(id=>$('#'+id).addEventListener('change',render));
+
+function render(){
+  const L=filtered(RESULTS);$('#empty').classList.toggle('hide',!!RESULTS.length);
+  const greens=L.filter(e=>e.score>=65).length,small=L.filter(e=>!e.hidden&&e.subs<1e4&&e.best>=1e5).length;
+  const med=L.length?L.map(e=>e.best).sort((a,b)=>a-b)[Math.floor(L.length/2)]:0;
+  const [cl,tx,col,d]=greens>=3?['g','NICHO VALIDADO','#2ecc71',`${greens} canais verdes: há demanda e espaço para canal novo.`]:greens>=1?['y','ENTRE COM ÂNGULO DIFERENTE','#ffc93c',`Só ${greens} canal(is) verde(s). Funciona, mas diferencie o formato.`]:['r','NICHO FECHADO OU FRACO','#ff3b3b','Nenhum canal pequeno explodindo. Tente afunilar o tema ou outro idioma.'];
+  $('#verdict').innerHTML=RESULTS.length?`<div class="verdict">
+    <div class="vbox vmain"><div class="light" style="color:${col}"></div><div><div class="t" style="color:${col}">${tx}</div><div class="d">${d}</div></div></div>
+    <div class="vbox"><div class="n">${L.length}</div><div class="l">canais no filtro</div></div>
+    <div class="vbox"><div class="n" style="color:var(--grn)">${greens}</div><div class="l">canais verdes</div></div>
+    <div class="vbox"><div class="n" style="color:var(--yel)">${small}</div><div class="l">&lt;10 mil inscr. com vídeo 100 mil+</div></div>
+    <div class="vbox"><div class="n">${fmt(med)}</div><div class="l">views medianas (melhor vídeo)</div></div></div>`:'';
+  $('#cards').innerHTML=L.length?L.map((e,i)=>card(e,i)).join(''):(RESULTS.length?'<div class="empty">Nenhum canal passa nos filtros. Afrouxe “Máx. inscritos” ou “Mín. views”.</div>':'');
+  bindCards($('#cards'),L);
+}
+function card(e,i){
+  const [c,t,col]=sig(e.score);const favs=LS.get('favs',{});const on=!!favs[e.id];
+  const b=e.vids[0];const young=e.age<=90?'<span class="pill b">✨ canal novo</span>':'';
+  const hot=e.mult&&e.mult>=5?'<span class="pill r">🔥 '+e.mult.toFixed(e.mult<10?1:0)+'× inscritos</span>':'';
+  return `<div class="card">
+  ${i!=null?`<div class="rank ${i===0?'g1':''}">${i+1}</div>`:''}
+  <div class="top"><img class="av" src="${e.avatar||''}" loading="lazy" referrerpolicy="no-referrer">
+    <div style="min-width:0"><div class="nm">${esc(e.name)}</div><div class="hd">${esc(e.handle)} ${e.country?'· '+e.country:''}</div>
+    <div class="pills"><span class="pill ${c}">${t}</span>${hot}${young}${e.cat?`<span class="pill">${esc(e.cat)}</span>`:''}${e.radar?'<span class="pill">📡 radar</span>':''}</div></div>
+    <div class="score" style="color:${col};border-color:${col}">${e.score}<small>NOTA</small></div></div>
+  <div class="metrics">
+    <div><b>${e.hidden?'oculto':fmt(e.subs)}</b><span>inscritos</span></div>
+    <div><b>${e.mult==null?'—':e.mult.toFixed(1)+'×'}</b><span>views ÷ inscr.</span></div>
+    <div><b>${fmt(e.nvid)}</b><span>vídeos no canal</span></div>
+    <div><b>${fmt(e.vpd)}</b><span>views/dia (top)</span></div>
+    <div><b>${fmt(e.avg)}</b><span>média/vídeo</span></div>
+    <div><b>${ageTxt(e.age)}</b><span>${e.first?'1º vídeo há':'canal criado'}</span></div></div>
+  ${e.vids.slice(0,2).map(v=>`<a class="vid" target="_blank" href="https://www.youtube.com/watch?v=${v.id}">
+    <div class="th"><img src="${v.thumb}" loading="lazy" referrerpolicy="no-referrer"><em>${dur(v.secs)}</em></div>
+    <div style="min-width:0"><div class="vt">${esc(v.title)}</div><div class="vm"><b>${fmt(v.views)} views</b> · há ${ageTxt((Date.now()-new Date(v.date))/864e5)}${v.short?' · Short':''}</div></div></a>`).join('')}
+  <div class="acts"><a class="p" target="_blank" href="https://www.youtube.com/channel/${e.id}/videos?view=0&sort=p">Abrir canal (populares) ↗</a>
+    <button class="fav ${on?'on':''}" data-id="${e.id}">${on?'★ Salvo':'☆ Salvar'}</button>
+    <button class="cp" data-id="${e.id}">Copiar link</button></div></div>`;
+}
+/* ---------- canais novos (mesmo critério do Radar: 1º vídeo ≤ 90 dias, ≤ 15 vídeos, ≥ 20 mil views) ---------- */
+const KW={"pt":[["documentário completo","Documentário"],["o que aconteceu com","Documentário"],["a ascensão e queda de","Documentário"],["documentário animais","Animais"],["animais selvagens","Animais"],["predadores mais perigosos","Animais"],["animais do pantanal","Animais"],["aves raras","Animais"],["animais pré-históricos","Pré-história"],["dinossauros documentário","Pré-história"],["megalodon","Pré-história"],["fundo do mar","Oceano"],["criaturas do oceano profundo","Oceano"],["tubarões documentário","Oceano"],["a tragédia de","Tragédias e Desastres"],["desastres naturais documentário","Tragédias e Desastres"],["tsunami documentário","Tragédias e Desastres"],["mistérios da história","Arqueologia e Mistérios"],["arqueologia descoberta","Arqueologia e Mistérios"],["civilizações antigas","Arqueologia e Mistérios"],["história do brasil","História"],["história medieval","História"],["segunda guerra mundial documentário","História"],["império romano","História"],["caso real","True Crime"],["crimes reais","True Crime"],["casos não resolvidos","True Crime"],["universo documentário","Espaço"],["espaço sideral","Espaço"],["buracos negros","Espaço"],["megaconstruções","Engenharia e Construção"],["engenharia incrível","Engenharia e Construção"],["como é viver em","Países e Vida Real"],["vida real em","Países e Vida Real"],["país mais pobre do mundo","Países e Vida Real"],["curiosidades","Curiosidades"],["você sabia","Curiosidades"],["fatos incríveis","Curiosidades"],["coisas que você não sabia","Curiosidades"],["bíblia explicada","Bíblia e Religião"],["personagens bíblicos","Bíblia e Religião"],["arqueologia bíblica","Bíblia e Religião"],["como ficar rico","Finanças e Negócios"],["história de empresas","Finanças e Negócios"],["finanças pessoais","Finanças e Negócios"],["inteligência artificial","Tecnologia e IA"],["tecnologia do futuro","Tecnologia e IA"],["música relaxante","Música e Relax"],["lofi","Música e Relax"],["corpo humano","Saúde e Corpo"],["saúde depois dos 60","Saúde e Corpo"]],"en":[["documentary","Documentário"],["full documentary","Documentário"],["the rise and fall of","Documentário"],["what happened to","Documentário"],["animal documentary","Animais"],["wildlife documentary","Animais"],["predator vs prey","Animais"],["rarest animals","Animais"],["strangest creatures","Animais"],["prehistoric animals documentary","Pré-história"],["dinosaurs documentary","Pré-história"],["prehistoric ocean monsters","Pré-história"],["ice age documentary","Pré-história"],["deep sea creatures","Oceano"],["deep ocean documentary","Oceano"],["sharks documentary","Oceano"],["disaster documentary","Tragédias e Desastres"],["the tragedy of","Tragédias e Desastres"],["worst disasters in history","Tragédias e Desastres"],["ancient civilizations documentary","Arqueologia e Mistérios"],["archaeology discovery","Arqueologia e Mistérios"],["scientists finally discovered","Arqueologia e Mistérios"],["unexplained mysteries","Arqueologia e Mistérios"],["history documentary","História"],["medieval history","História"],["ww2 documentary","História"],["ancient rome","História"],["cold war documentary","História"],["true crime documentary","True Crime"],["bodycam","True Crime"],["unsolved cases","True Crime"],["interrogation","True Crime"],["space documentary","Espaço"],["universe documentary","Espaço"],["black holes","Espaço"],["mega projects","Engenharia e Construção"],["engineering documentary","Engenharia e Construção"],["how it was built","Engenharia e Construção"],["life in","Países e Vida Real"],["real life in","Países e Vida Real"],["inside the most isolated country","Países e Vida Real"],["things you didn't know","Curiosidades"],["facts","Curiosidades"],["explained","Curiosidades"],["why do","Curiosidades"],["bible explained","Bíblia e Religião"],["biblical history","Bíblia e Religião"],["biblical archaeology","Bíblia e Religião"],["business documentary","Finanças e Negócios"],["how they made billions","Finanças e Negócios"],["personal finance","Finanças e Negócios"],["artificial intelligence explained","Tecnologia e IA"],["future technology","Tecnologia e IA"],["ai documentary","Tecnologia e IA"],["lofi hip hop","Música e Relax"],["relaxing music","Música e Relax"],["sleep music","Música e Relax"],["ambient music","Música e Relax"],["human body documentary","Saúde e Corpo"],["health after 60","Saúde e Corpo"]],"es":[["documental completo","Documentário"],["qué pasó con","Documentário"],["documental animales","Animais"],["animales salvajes","Animais"],["animales más raros","Animais"],["animales prehistóricos","Pré-história"],["dinosaurios documental","Pré-história"],["fondo del mar documental","Oceano"],["criaturas del océano","Oceano"],["la tragedia de","Tragédias e Desastres"],["desastres naturales documental","Tragédias e Desastres"],["misterios de la historia","Arqueologia e Mistérios"],["civilizaciones antiguas","Arqueologia e Mistérios"],["historia de méxico","História"],["historia medieval documental","História"],["segunda guerra mundial documental","História"],["casos reales","True Crime"],["crimen real documental","True Crime"],["universo documental","Espaço"],["el espacio","Espaço"],["megaconstrucciones","Engenharia e Construção"],["ingeniería documental","Engenharia e Construção"],["así es la vida en","Países e Vida Real"],["cuánto cuesta vivir en","Países e Vida Real"],["curiosidades","Curiosidades"],["datos increíbles","Curiosidades"],["la biblia explicada","Bíblia e Religião"],["historia bíblica","Bíblia e Religião"],["historia de empresas","Finanças e Negócios"],["finanzas personales","Finanças e Negócios"],["inteligencia artificial","Tecnologia e IA"],["tecnología del futuro","Tecnologia e IA"],["música relajante","Música e Relax"],["cuerpo humano","Saúde e Corpo"],["salud después de los 60","Saúde e Corpo"]],"de":[["dokumentation","Documentário"],["doku deutsch","Documentário"],["was geschah mit","Documentário"],["tierdoku","Animais"],["wildtiere doku","Animais"],["gefährlichste tiere","Animais"],["dinosaurier doku","Pré-história"],["urzeit tiere","Pré-história"],["tiefsee doku","Oceano"],["haie doku","Oceano"],["katastrophen doku","Tragédias e Desastres"],["die tragödie von","Tragédias e Desastres"],["antike zivilisationen","Arqueologia e Mistérios"],["archäologie doku","Arqueologia e Mistérios"],["ungelöste rätsel","Arqueologia e Mistérios"],["geschichte doku","História"],["zweiter weltkrieg doku","História"],["mittelalter doku","História"],["römisches reich","História"],["true crime deutsch","True Crime"],["kriminalfall doku","True Crime"],["ungelöste fälle","True Crime"],["weltall doku","Espaço"],["universum doku","Espaço"],["schwarze löcher","Espaço"],["megabauten","Engenharia e Construção"],["ingenieurskunst doku","Engenharia e Construção"],["so lebt man in","Países e Vida Real"],["leben in","Países e Vida Real"],["fakten die du nicht wusstest","Curiosidades"],["erklärt","Curiosidades"],["warum ist","Curiosidades"],["bibel erklärt","Bíblia e Religião"],["biblische geschichte doku","Bíblia e Religião"],["finanzen","Finanças e Negócios"],["wirtschaft doku","Finanças e Negócios"],["künstliche intelligenz","Tecnologia e IA"],["technik der zukunft","Tecnologia e IA"],["entspannungsmusik","Música e Relax"],["menschlicher körper doku","Saúde e Corpo"],["gesundheit ab 60","Saúde e Corpo"]],"fr":[["documentaire complet","Documentário"],["documentaire français","Documentário"],["que s'est-il passé","Documentário"],["documentaire animalier","Animais"],["animaux sauvages","Animais"],["animaux les plus dangereux","Animais"],["dinosaures documentaire","Pré-história"],["animaux préhistoriques","Pré-história"],["créatures des abysses","Oceano"],["fond des océans documentaire","Oceano"],["catastrophe documentaire","Tragédias e Desastres"],["la tragédie de","Tragédias e Desastres"],["civilisations anciennes","Arqueologia e Mistérios"],["mystères de l'histoire","Arqueologia e Mistérios"],["archéologie documentaire","Arqueologia e Mistérios"],["histoire documentaire","História"],["seconde guerre mondiale documentaire","História"],["moyen âge documentaire","História"],["empire romain","História"],["affaire criminelle","True Crime"],["true crime français","True Crime"],["affaire non résolue","True Crime"],["univers documentaire","Espaço"],["espace documentaire","Espaço"],["trous noirs","Espaço"],["méga constructions","Engenharia e Construção"],["ingénierie documentaire","Engenharia e Construção"],["la vie en","Países e Vida Real"],["vivre en","Países e Vida Real"],["pays le plus pauvre du monde","Países e Vida Real"],["le saviez-vous","Curiosidades"],["faits incroyables","Curiosidades"],["expliqué","Curiosidades"],["la bible expliquée","Bíblia e Religião"],["histoire biblique documentaire","Bíblia e Religião"],["finances personnelles","Finanças e Negócios"],["histoire d'entreprise","Finanças e Negócios"],["économie documentaire","Finanças e Negócios"],["intelligence artificielle","Tecnologia e IA"],["technologie du futur","Tecnologia e IA"],["musique relaxante","Música e Relax"],["corps humain documentaire","Saúde e Corpo"],["santé après 60 ans","Saúde e Corpo"]]};
+const NEW_AGE=90,NEW_MAXV=15,NEW_MINVIEWS=20000,MAX_SEARCH=3,TARGET=10;
+$('#dlang').value=LS.get('dlang','pt|BR');
+$('#dNoShorts').checked=LS.get('dns',false);
+function nichesOf(lang){return[...new Set((KW[lang]||KW.en).map(x=>x[1]))]}
+function fillNiche(){const lang=$('#dlang').value.split('|')[0],cur=LS.get('dniche','*');
+  $('#dniche').innerHTML='<option value="">🎯 Escolha o nicho...</option><option value="*">🌎 Todos (rodízio)</option>'+nichesOf(lang).map(n=>`<option${n===cur?' selected':''}>${esc(n)}</option>`).join('');
+  if(cur==='*')$('#dniche').value='*'}
+fillNiche();
+$('#dniche').onchange=()=>{LS.set('dniche',$('#dniche').value);discover()};
+$('#dlang').onchange=()=>{LS.set('dlang',$('#dlang').value);fillNiche();discover()};
+$('#dNoShorts').onchange=()=>{LS.set('dns',$('#dNoShorts').checked);const lang=$('#dlang').value.split('|')[0];const L=nview(dstore(lang).list);drawDisc(L);const dm=$('#dmsg');dm.className='msg info';dm.textContent=`${L.length} canais novos no filtro (0 unidades gastas).${L.length<TARGET?' Clique em 🔎 Procurar canais novos para achar mais.':''}`};
+$('#dref').onclick=()=>discover(true);
+let DISC=[],DBUSY=false;
+const RADAR='https://raw.githubusercontent.com/eduardoalvessoares66-design/radar-nichos/main/data/';let RADAR_INFO={};
+async function loadRadar(lang){const c=LS.get('radar_'+lang,null);if(c&&Date.now()-c.t<3*3600e3)return c.d;
+  try{const r=await fetch(RADAR+'novos_'+lang+'.json?'+Math.floor(Date.now()/3600e3));if(!r.ok)throw 0;const d=await r.json();
+    try{LS.set('radar_'+lang,{t:Date.now(),d})}catch(e){}return d}catch(e){return c?c.d:null}}
+async function mergeRadar(lang){const d=await loadRadar(lang);if(!d||!d.list)return 0;const st=dstore(lang);const by={};st.list.forEach(e=>by[e.id]=e);
+  d.list.forEach(e=>{e.radar=1;by[e.id]=by[e.id]&&!by[e.id].radar?{...e,radar:0}:e});st.list=Object.values(by);
+  st.list=st.list.filter(e=>(Date.now()-new Date(e.first))/864e5<=NEW_AGE);LS.set('novos_'+lang,st);RADAR_INFO[lang]=d;return d.list.length}
+function dstore(lang){const st=LS.get('novos_'+lang,{list:[],chk:{},kw:0,runs:0});
+  const now=Date.now();st.list=st.list.filter(e=>(now-new Date(e.first))/864e5<=NEW_AGE);
+  Object.keys(st.chk).forEach(k=>{if(now-st.chk[k]>5*864e5)delete st.chk[k]});return st}
+function nview(list){const n=$('#dniche').value;return dview(n&&n!=='*'?list.filter(e=>e.cat===n):list)}
+function dview(list){const ns=$('#dNoShorts').checked;
+  return list.map(e=>{const vids=ns?e.vids.filter(v=>!v.short):e.vids;if(!vids.length)return null;if(ns&&e.shortsPct>=60)return null;
+    const x={...e,vids};const b=vids[0];x.best=b.views;x.vpd=b.vpd;x.avg=e.nvid?e.total/e.nvid:0;x.age=Math.max(1,(Date.now()-new Date(e.first))/864e5);
+    x.mult=x.hidden||!x.subs?null:b.views/x.subs;x.score=score(x);return x}).filter(Boolean).sort((a,b)=>b.score-a.score)}
+async function discover(force){
+  if(DBUSY)return;
+  const [lang,reg]=$('#dlang').value.split('|'),dm=$('#dmsg'),ns=$('#dNoShorts').checked,niche=$('#dniche').value;dm.className='msg';
+  if(!force)await mergeRadar(lang);
+  const st=dstore(lang);let have=nview(st.list);drawDisc(have);
+  if(!force){const R=RADAR_INFO[lang];const ra=R?(Date.now()-new Date(R.updated))/864e5:0;const rtxt=R?`📡 Radar atualizado ${ra<1?'hoje':'há '+ageTxt(ra)}. `:'';dm.className='msg info';dm.innerHTML=have.length?`${rtxt}${have.length} canais novos${niche&&niche!=='*'?' em '+esc(niche):''}, sem gastar sua cota. Quer mais? Clique em 🔎 Procurar canais novos (~3% da cota).`:(niche?'Clique em 🔎 Procurar canais novos. Só gasta cota quando você clica (~3% por clique).':'👉 Escolha um nicho e clique em 🔎 Procurar canais novos. Só gasta cota quando você clica (~3% por clique).');return}
+  if(!niche){dm.className='msg err';dm.textContent='Escolha um nicho primeiro (ou “Todos”).';$('#dniche').focus();return}
+  if(!LS.get('key','')){dm.className='msg info';dm.innerHTML='Primeiro coloque sua chave grátis: <a href="#" onclick="showTab(\'chave\');return false">🔑 Colocar chave API (com passo a passo)</a>';return}
+  DBUSY=true;$('#dload').style.display='flex';$('#dref').disabled=true;const before=quotaUsed(),goal=have.length+TARGET;
+  const L=niche==='*'?(KW[lang]||KW.en):(KW[lang]||KW.en).filter(x=>x[1]===niche);st.kwn=st.kwn||{};let searches=0,added=0,err=null;
+  try{
+    while(nview(st.list).length<goal&&searches<MAX_SEARCH){
+      const kn=st.kwn[niche]||0;st.kwn[niche]=kn+1;const [q,cat]=L[kn%L.length];st.runs++;searches++;
+      const win=[30,7,NEW_AGE][Math.floor(kn/L.length)%3];
+      const durs=ns?['medium','long']:['any','medium','long'];const dur=durs[st.runs%durs.length];
+      $('#dlt').textContent=`Procurando canais novos em “${q}”... (${searches}/${MAX_SEARCH}) · achados: ${nview(st.list).length}`;
+      const after=new Date(Date.now()-win*864e5).toISOString().replace(/\.\d+Z/,'Z');
+      const r=await yt('search',{part:'snippet',type:'video',q,order:'relevance',publishedAfter:after,maxResults:50,relevanceLanguage:lang,regionCode:reg,videoDuration:dur,safeSearch:'none'},100);
+      const known=new Set(st.list.map(e=>e.id));
+      const ids=[...new Set(r.items.map(i=>i.snippet.channelId))].filter(id=>!known.has(id)&&!st.chk[id]);
+      for(let i=0;i<ids.length;i+=50){
+        const cr=await yt('channels',{part:'snippet,statistics,contentDetails',id:ids.slice(i,i+50).join(',')},1);
+        for(const c of cr.items){st.chk[c.id]=Date.now();
+          const nv=+(c.statistics.videoCount||0),tv=+(c.statistics.viewCount||0);
+          if(!(nv>0&&nv<=NEW_MAXV&&tv>=NEW_MINVIEWS))continue;
+          const pl=await yt('playlistItems',{part:'contentDetails',playlistId:c.contentDetails.relatedPlaylists.uploads,maxResults:50},1);
+          const dates=pl.items.map(x=>x.contentDetails.videoPublishedAt).filter(Boolean);if(!dates.length)continue;
+          const first=dates.sort()[0];if((Date.now()-new Date(first))/864e5>NEW_AGE)continue;
+          const vr=await yt('videos',{part:'snippet,statistics,contentDetails',id:pl.items.slice(0,50).map(x=>x.contentDetails.videoId).join(',')},1);
+          if(!vr.items.length)continue;
+          const e=build(vr.items,{[c.id]:c})[0];if(!e)continue;
+          e.first=first;e.created=first;e.cat=cat;e.kw=q;e.shortsPct=Math.round(100*e.vids.filter(v=>v.short).length/e.vids.length);
+          e.vids=e.vids.slice(0,6);st.list.push(e);added++}
+      }
+      LS.set('novos_'+lang,st);drawDisc(nview(st.list));
+    }
+  }catch(e){err=e}
+  finally{try{LS.set('novos_'+lang,st)}catch(x){st.chk={};LS.set('novos_'+lang,st)}
+    DBUSY=false;$('#dload').style.display='none';$('#dref').disabled=false}
+  have=nview(st.list);drawDisc(have);const cost=quotaUsed()-before;
+  if(err&&!added){dm.className='msg err';dm.innerHTML=err.message;return}
+  dm.className=have.length?'msg ok':'msg info';
+  dm.innerHTML=`${have.length?'✅':'🔎'} ${added} canal(is) novo(s) achado(s) nesta rodada (${searches} pesquisas, ${cost.toLocaleString('pt-BR')} unidades). ${added?'':'Tente de novo (usa outras palavras do nicho) ou escolha outro nicho.'}${err?'<br>'+err.message:''}`;
+}
+function drawDisc(L){DISC=L;
+  if(!L.length){$('#dcards').innerHTML=DBUSY?'':'<div class="empty"><h2>Nenhum canal novo ainda</h2>Escolha um nicho ou clique em 🔎 Procurar canais novos.</div>';return}
+  $('#dcards').innerHTML=L.map((e,i)=>card(e,i)).join('');bindCards($('#dcards'),L)}
+
+function bindCards(root,L){
+  root.querySelectorAll('.fav').forEach(b=>b.onclick=()=>{const f=LS.get('favs',{});const id=b.dataset.id;
+    if(f[id])delete f[id];else{const e=L.find(x=>x.id===id)||Object.values(f).find(x=>x.id===id);f[id]={...e,savedQ:LASTQ}}
+    LS.set('favs',f);favCount();if(root.id==='favCards')renderFavs();else{b.classList.toggle('on');b.textContent=f[id]?'★ Salvo':'☆ Salvar'}});
+  root.querySelectorAll('.cp').forEach(b=>b.onclick=()=>{navigator.clipboard.writeText('https://www.youtube.com/channel/'+b.dataset.id);b.textContent='✓ Copiado';setTimeout(()=>b.textContent='Copiar link',1200)});
+}
+function renderFavs(){const L=Object.values(LS.get('favs',{})).sort((a,b)=>b.score-a.score);
+  $('#favCards').innerHTML=L.map(e=>card(e,null).replace('<div class="pills">',`<div class="hd" style="color:var(--yel)">busca: ${esc(e.savedQ||'')}</div><div class="pills">`)).join('');
+  $('#favEmpty').classList.toggle('hide',!!L.length);bindCards($('#favCards'),L)}
+function favCount(){const n=Object.keys(LS.get('favs',{})).length;$('#favN').textContent=n?`(${n})`:''}
+favCount();
+$('#favClr').onclick=()=>{if(confirm('Apagar todos os favoritos?')){LS.set('favs',{});favCount();renderFavs()}};
+
+/* ---------- CSV ---------- */
+function toCSV(L,name){if(!L.length){alert('Nada para exportar.');return}
+  const H=['Canal','Link','Inscritos','Views÷Inscritos','Nota','Sinal','Vídeos no canal','Canal criado','Melhor vídeo','Views do melhor vídeo','Views/dia','Link do vídeo'];
+  const rows=L.map(e=>[e.name,'https://www.youtube.com/channel/'+e.id,e.hidden?'oculto':e.subs,e.mult?e.mult.toFixed(1):'',e.score,sig(e.score)[1],e.nvid,e.created.slice(0,10),e.vids[0].title,e.vids[0].views,Math.round(e.vpd),'https://youtu.be/'+e.vids[0].id]);
+  const csv='\ufeff'+[H,...rows].map(r=>r.map(x=>'"'+String(x).replace(/"/g,'""')+'"').join(';')).join('\r\n');
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download=name+'.csv';a.click()}
+$('#csv').onclick=()=>toCSV(filtered(RESULTS),'nichos_'+(LASTQ||'busca').replace(/\W+/g,'_'));
+$('#favCsv').onclick=()=>toCSV(Object.values(LS.get('favs',{})),'favoritos_nichos');
+
+/* ---------- ideias com IA (prompt pronto) ---------- */
+$('#ideas').onclick=()=>{const L=filtered(RESULTS).slice(0,12);if(!LASTQ){alert('Faça uma busca primeiro.');return}
+  const lg=$('#lang').selectedOptions[0].textContent.replace(/^\S+\s/,'');
+  const p=`Você é um roteirista de YouTube especialista em encontrar ideias com demanda.
+
+NICHO: ${LASTQ}
+IDIOMA DO CANAL: ${lg}
+
+VÍDEOS QUE ESTÃO BOMBANDO NESSE NICHO AGORA (canal | inscritos | views do vídeo | título):
+${L.map(e=>`- ${e.name} | ${e.hidden?'oculto':e.subs} | ${e.vids[0].views} | ${e.vids[0].title}`).join('\n')}
+
+FAÇA:
+1. Em 3 linhas: o que esses vídeos têm em comum (formato, tema, tipo de título, emoção).
+2. 30 ideias de vídeo em TABELA: Nº | Título (até 60 caracteres) | Ângulo diferente | Demanda (1–5) | Facilidade (1–5).
+   Não copie os títulos acima; use o padrão deles com temas e ângulos novos.
+3. Marque as 5 melhores para começar e explique cada uma em 1 linha.
+4. Sugira 2 formatos de canal diferentes dos que já existem nesse nicho.`;
+  navigator.clipboard.writeText(p).then(()=>{msg('ok','✅ Prompt copiado com os vídeos desta busca. Abrindo o ChatGPT: cole com Ctrl+V.');window.open('https://chatgpt.com/','_blank')})};
+
+/* ---------- util ---------- */
+function fmt(n){n=+n||0;return n>=1e9?(n/1e9).toFixed(1).replace('.',',')+' bi':n>=1e6?(n/1e6).toFixed(1).replace('.',',')+' mi':n>=1e3?(n/1e3).toFixed(n>=1e4?0:1).replace('.',',')+' mil':Math.round(n)+''}
+function ageTxt(d){return d<1?'hoje':d<31?Math.round(d)+' d':d<365?Math.round(d/30.4)+' m':(d/365).toFixed(1).replace('.',',')+' a'}
+function dur(s){if(!s)return'';const h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=s%60;return(h?h+':'+String(m).padStart(2,'0'):m)+':'+String(x).padStart(2,'0')}
+function esc(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+</script>
+</body>
+</html>
