@@ -1,0 +1,34 @@
+name: Radar diario
+
+on:
+  schedule:
+    - cron: "30 9 * * *"   # 06:30 de Brasília (depois que a cota do Google zera)
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: radar
+  cancel-in-progress: false
+
+jobs:
+  radar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Rodar radar
+        env:
+          YT_KEY: ${{ secrets.YT_KEY }}
+        run: python radar.py
+      - name: Salvar resultados
+        run: |
+          git config user.name "radar-bot"
+          git config user.email "radar-bot@users.noreply.github.com"
+          git add data/
+          git diff --cached --quiet || git commit -m "Radar $(date -u +%Y-%m-%d)"
+          git push

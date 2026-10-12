@@ -1,0 +1,932 @@
+{
+ "pt": [
+  [
+   "documentário completo",
+   "Documentário"
+  ],
+  [
+   "o que aconteceu com",
+   "Documentário"
+  ],
+  [
+   "a ascensão e queda de",
+   "Documentário"
+  ],
+  [
+   "documentário animais",
+   "Animais"
+  ],
+  [
+   "animais selvagens",
+   "Animais"
+  ],
+  [
+   "predadores mais perigosos",
+   "Animais"
+  ],
+  [
+   "animais do pantanal",
+   "Animais"
+  ],
+  [
+   "aves raras",
+   "Animais"
+  ],
+  [
+   "animais pré-históricos",
+   "Pré-história"
+  ],
+  [
+   "dinossauros documentário",
+   "Pré-história"
+  ],
+  [
+   "megalodon",
+   "Pré-história"
+  ],
+  [
+   "fundo do mar",
+   "Oceano"
+  ],
+  [
+   "criaturas do oceano profundo",
+   "Oceano"
+  ],
+  [
+   "tubarões documentário",
+   "Oceano"
+  ],
+  [
+   "a tragédia de",
+   "Tragédias e Desastres"
+  ],
+  [
+   "desastres naturais documentário",
+   "Tragédias e Desastres"
+  ],
+  [
+   "tsunami documentário",
+   "Tragédias e Desastres"
+  ],
+  [
+   "mistérios da história",
+   "Arqueologia e Mistérios"
+  ],
+  [
+   "arqueologia descoberta",
+   "Arqueologia e Mistérios"
+  ],
+  [
+   "civilizações antigas",
+   "Arqueologia e Mistérios"
+  ],
+  [
+   "história do brasil",
+   "História"
+  ],
+  [
+   "história medieval",
+   "História"
+  ],
+  [
+   "segunda guerra mundial documentário",
+   "História"
+  ],
+  [
+   "império romano",
+   "História"
+  ],
+  [
+   "caso real",
+   "True Crime"
+  ],
+  [
+   "crimes reais",
+   "True Crime"
+  ],
+  [
+   "casos não resolvidos",
+   "True Crime"
+  ],
+  [
+   "universo documentário",
+   "Espaço"
+  ],
+  [
+   "espaço sideral",
+   "Espaço"
+  ],
+  [
+   "buracos negros",
+   "Espaço"
+  ],
+  [
+   "megaconstruções",
+   "Engenharia e Construção"
+  ],
+  [
+   "engenharia incrível",
+   "Engenharia e Construção"
+  ],
+  [
+   "como é viver em",
+   "Países e Vida Real"
+  ],
+  [
+   "vida real em",
+   "Países e Vida Real"
+  ],
+  [
+   "país mais pobre do mundo",
+   "Países e Vida Real"
+  ],
+  [
+   "curiosidades",
+   "Curiosidades"
+  ],
+  [
+   "você sabia",
+   "Curiosidades"
+  ],
+  [
+   "fatos incríveis",
+   "Curiosidades"
+  ],
+  [
+   "coisas que você não sabia",
+   "Curiosidades"
+  ],
+  [
+   "bíblia explicada",
+   "Bíblia e Religião"
+  ],
+  [
+   "personagens bíblicos",
+   "Bíblia e Religião"
+  ],
+  [
+   "arqueologia bíblica",
+   "Bíblia e Religião"
+  ],
+  [
+   "como ficar rico",
+   "Finanças e Negócios"
+  ],
+  [
+   "história de empresas",
+   "Finanças e Negócios"
+  ],
+  [
+   "finanças pessoais",
+   "Finanças e Negócios"
+  ],
+  [
+   "inteligência artificial",
+   "Tecnologia e IA"
+  ],
+  [
+   "tecnologia do futuro",
+   "Tecnologia e IA"
+  ],
+  [
+   "música relaxante",
+   "Música e Relax"
+  ],
+  [
+   "lofi",
+   "Música e Relax"
+  ],
+  [
+   "corpo humano",
+   "Saúde e Corpo"
+  ],
+  [
+   "saúde depois dos 60",
+   "Saúde e Corpo"
+  ]
+ ],
+ "en": [
+  [
+   "documentary",
+   "Documentário"
+  ],
+  [
+   "full documentary",
+   "Documentário"
+  ],
+  [
+   "the rise and fall of",
+   "Documentário"
+  ],
+  [
+   "what happened to",
+   "Documentário"
+  ],
+  [
+   "animal documentary",
+   "Animais"
+  ],
+  [
+   "wildlife documentary",
+   "Animais"
+  ],
+  [
+   "predator vs prey",
+   "Animais"
+  ],
+  [
+   "rarest animals",
+   "Animais"
+  ],
+  [
+   "strangest creatures",
+   "Animais"
+  ],
+  [
+   "prehistoric animals documentary",
+   "Pré-história"
+  ],
+  [
+   "dinosaurs documentary",
+   "Pré-história"
+  ],
+  [
+   "prehistoric ocean monsters",
+   "Pré-história"
+  ],
+  [
+   "ice age documentary",
+   "Pré-história"
+  ],
+  [
+   "deep sea creatures",
+   "Oceano"
+  ],
+  [
+   "deep ocean documentary",
+   "Oceano"
+  ],
+  [
+   "sharks documentary",
+   "Oceano"
+  ],
+  [
+   "disaster documentary",
+   "Tragédias e Desastres"
+  ],
+  [
+   "the tragedy of",
+   "Tragédias e Desastres"
+  ],
+  [
+   "worst disasters in history",
+   "Tragédias e Desastres"
+  ],
+  [
+   "ancient civilizations documentary",
+   "Arqueologia e Mistérios"
+  ],
+  [
+   "archaeology discovery",
+   "Arqueologia e Mistérios"
+  ],
+  [
+   "scientists finally discovered",
+   "Arqueologia e Mistérios"
+  ],
+  [
+   "unexplained mysteries",
+   "Arqueologia e Mistérios"
+  ],
+  [
+   "history documentary",
+   "História"
+  ],
+  [
+   "medieval history",
+   "História"
+  ],
+  [
+   "ww2 documentary",
+   "História"
+  ],
+  [
+   "ancient rome",
+   "História"
+  ],
+  [
+   "cold war documentary",
+   "História"
+  ],
+  [
+   "true crime documentary",
+   "True Crime"
+  ],
+  [
+   "bodycam",
+   "True Crime"
+  ],
+  [
+   "unsolved cases",
+   "True Crime"
+  ],
+  [
+   "interrogation",
+   "True Crime"
+  ],
+  [
+   "space documentary",
+   "Espaço"
+  ],
+  [
+   "universe documentary",
+   "Espaço"
+  ],
+  [
+   "black holes",
+   "Espaço"
+  ],
+  [
+   "mega projects",
+   "Engenharia e Construção"
+  ],
+  [
+   "engineering documentary",
+   "Engenharia e Construção"
+  ],
+  [
+   "how it was built",
+   "Engenharia e Construção"
+  ],
+  [
+   "life in",
+   "Países e Vida Real"
+  ],
+  [
+   "real life in",
+   "Países e Vida Real"
+  ],
+  [
+   "inside the most isolated country",
+   "Países e Vida Real"
+  ],
+  [
+   "things you didn't know",
+   "Curiosidades"
+  ],
+  [
+   "facts",
+   "Curiosidades"
+  ],
+  [
+   "explained",
+   "Curiosidades"
+  ],
+  [
+   "why do",
+   "Curiosidades"
+  ],
+  [
+   "bible explained",
+   "Bíblia e Religião"
+  ],
+  [
+   "biblical history",
+   "Bíblia e Religião"
+  ],
+  [
+   "biblical archaeology",
+   "Bíblia e Religião"
+  ],
+  [
+   "business documentary",
+   "Finanças e Negócios"
+  ],
+  [
+   "how they made billions",
+   "Finanças e Negócios"
+  ],
+  [
+   "personal finance",
+   "Finanças e Negócios"
+  ],
+  [
+   "artificial intelligence explained",
+   "Tecnologia e IA"
+  ],
+  [
+   "future technology",
+   "Tecnologia e IA"
+  ],
+  [
+   "ai documentary",
+   "Tecnologia e IA"
+  ],
+  [
+   "lofi hip hop",
+   "Música e Relax"
+  ],
+  [
+   "relaxing music",
+   "Música e Relax"
+  ],
+  [
+   "sleep music",
+   "Música e Relax"
+  ],
+  [
+   "ambient music",
+   "Música e Relax"
+  ],
+  [
+   "human body documentary",
+   "Saúde e Corpo"
+  ],
+  [
+   "health after 60",
+   "Saúde e Corpo"
+  ]
+ ],
+ "es": [
+  [
+   "documental completo",
+   "Documentário"
+  ],
+  [
+   "qué pasó con",
+   "Documentário"
+  ],
+  [
+   "documental animales",
+   "Animais"
+  ],
+  [
+   "animales salvajes",
+   "Animais"
+  ],
+  [
+   "animales más raros",
+   "Animais"
+  ],
+  [
+   "animales prehistóricos",
+   "Pré-história"
+  ],
+  [
+   "dinosaurios documental",
+   "Pré-história"
+  ],
+  [
+   "fondo del mar documental",
+   "Oceano"
+  ],
+  [
+   "criaturas del océano",
+   "Oceano"
+  ],
+  [
+   "la tragedia de",
+   "Tragédias e Desastres"
+  ],
+  [
+   "desastres naturales documental",
+   "Tragédias e Desastres"
+  ],
+  [
+   "misterios de la historia",
+   "Arqueologia e Mistérios"
+  ],
+  [
+   "civilizaciones antiguas",
+   "Arqueologia e Mistérios"
+  ],
+  [
+   "historia de méxico",
+   "História"
+  ],
+  [
+   "historia medieval documental",
+   "História"
+  ],
+  [
+   "segunda guerra mundial documental",
+   "História"
+  ],
+  [
+   "casos reales",
+   "True Crime"
+  ],
+  [
+   "crimen real documental",
+   "True Crime"
+  ],
+  [
+   "universo documental",
+   "Espaço"
+  ],
+  [
+   "el espacio",
+   "Espaço"
+  ],
+  [
+   "megaconstrucciones",
+   "Engenharia e Construção"
+  ],
+  [
+   "ingeniería documental",
+   "Engenharia e Construção"
+  ],
+  [
+   "así es la vida en",
+   "Países e Vida Real"
+  ],
+  [
+   "cuánto cuesta vivir en",
+   "Países e Vida Real"
+  ],
+  [
+   "curiosidades",
+   "Curiosidades"
+  ],
+  [
+   "datos increíbles",
+   "Curiosidades"
+  ],
+  [
+   "la biblia explicada",
+   "Bíblia e Religião"
+  ],
+  [
+   "historia bíblica",
+   "Bíblia e Religião"
+  ],
+  [
+   "historia de empresas",
+   "Finanças e Negócios"
+  ],
+  [
+   "finanzas personales",
+   "Finanças e Negócios"
+  ],
+  [
+   "inteligencia artificial",
+   "Tecnologia e IA"
+  ],
+  [
+   "tecnología del futuro",
+   "Tecnologia e IA"
+  ],
+  [
+   "música relajante",
+   "Música e Relax"
+  ],
+  [
+   "cuerpo humano",
+   "Saúde e Corpo"
+  ],
+  [
+   "salud después de los 60",
+   "Saúde e Corpo"
+  ]
+ ],
+ "de": [
+  [
+   "dokumentation",
+   "Documentário"
+  ],
+  [
+   "doku deutsch",
+   "Documentário"
+  ],
+  [
+   "was geschah mit",
+   "Documentário"
+  ],
+  [
+   "tierdoku",
+   "Animais"
+  ],
+  [
+   "wildtiere doku",
+   "Animais"
+  ],
+  [
+   "gefährlichste tiere",
+   "Animais"
+  ],
+  [
+   "dinosaurier doku",
+   "Pré-história"
+  ],
+  [
+   "urzeit tiere",
+   "Pré-história"
+  ],
+  [
+   "tiefsee doku",
+   "Oceano"
+  ],
+  [
+   "haie doku",
+   "Oceano"
+  ],
+  [
+   "katastrophen doku",
+   "Tragédias e Desastres"
+  ],
+  [
+   "die tragödie von",
+   "Tragédias e Desastres"
+  ],
+  [
+   "antike zivilisationen",
+   "Arqueologia e Mistérios"
+  ],
+  [
+   "archäologie doku",
+   "Arqueologia e Mistérios"
+  ],
+  [
+   "ungelöste rätsel",
+   "Arqueologia e Mistérios"
+  ],
+  [
+   "geschichte doku",
+   "História"
+  ],
+  [
+   "zweiter weltkrieg doku",
+   "História"
+  ],
+  [
+   "mittelalter doku",
+   "História"
+  ],
+  [
+   "römisches reich",
+   "História"
+  ],
+  [
+   "true crime deutsch",
+   "True Crime"
+  ],
+  [
+   "kriminalfall doku",
+   "True Crime"
+  ],
+  [
+   "ungelöste fälle",
+   "True Crime"
+  ],
+  [
+   "weltall doku",
+   "Espaço"
+  ],
+  [
+   "universum doku",
+   "Espaço"
+  ],
+  [
+   "schwarze löcher",
+   "Espaço"
+  ],
+  [
+   "megabauten",
+   "Engenharia e Construção"
+  ],
+  [
+   "ingenieurskunst doku",
+   "Engenharia e Construção"
+  ],
+  [
+   "so lebt man in",
+   "Países e Vida Real"
+  ],
+  [
+   "leben in",
+   "Países e Vida Real"
+  ],
+  [
+   "fakten die du nicht wusstest",
+   "Curiosidades"
+  ],
+  [
+   "erklärt",
+   "Curiosidades"
+  ],
+  [
+   "warum ist",
+   "Curiosidades"
+  ],
+  [
+   "bibel erklärt",
+   "Bíblia e Religião"
+  ],
+  [
+   "biblische geschichte doku",
+   "Bíblia e Religião"
+  ],
+  [
+   "finanzen",
+   "Finanças e Negócios"
+  ],
+  [
+   "wirtschaft doku",
+   "Finanças e Negócios"
+  ],
+  [
+   "künstliche intelligenz",
+   "Tecnologia e IA"
+  ],
+  [
+   "technik der zukunft",
+   "Tecnologia e IA"
+  ],
+  [
+   "entspannungsmusik",
+   "Música e Relax"
+  ],
+  [
+   "menschlicher körper doku",
+   "Saúde e Corpo"
+  ],
+  [
+   "gesundheit ab 60",
+   "Saúde e Corpo"
+  ]
+ ],
+ "fr": [
+  [
+   "documentaire complet",
+   "Documentário"
+  ],
+  [
+   "documentaire français",
+   "Documentário"
+  ],
+  [
+   "que s'est-il passé",
+   "Documentário"
+  ],
+  [
+   "documentaire animalier",
+   "Animais"
+  ],
+  [
+   "animaux sauvages",
+   "Animais"
+  ],
+  [
+   "animaux les plus dangereux",
+   "Animais"
+  ],
+  [
+   "dinosaures documentaire",
+   "Pré-história"
+  ],
+  [
+   "animaux préhistoriques",
+   "Pré-história"
+  ],
+  [
+   "créatures des abysses",
+   "Oceano"
+  ],
+  [
+   "fond des océans documentaire",
+   "Oceano"
+  ],
+  [
+   "catastrophe documentaire",
+   "Tragédias e Desastres"
+  ],
+  [
+   "la tragédie de",
+   "Tragédias e Desastres"
+  ],
+  [
+   "civilisations anciennes",
+   "Arqueologia e Mistérios"
+  ],
+  [
+   "mystères de l'histoire",
+   "Arqueologia e Mistérios"
+  ],
+  [
+   "archéologie documentaire",
+   "Arqueologia e Mistérios"
+  ],
+  [
+   "histoire documentaire",
+   "História"
+  ],
+  [
+   "seconde guerre mondiale documentaire",
+   "História"
+  ],
+  [
+   "moyen âge documentaire",
+   "História"
+  ],
+  [
+   "empire romain",
+   "História"
+  ],
+  [
+   "affaire criminelle",
+   "True Crime"
+  ],
+  [
+   "true crime français",
+   "True Crime"
+  ],
+  [
+   "affaire non résolue",
+   "True Crime"
+  ],
+  [
+   "univers documentaire",
+   "Espaço"
+  ],
+  [
+   "espace documentaire",
+   "Espaço"
+  ],
+  [
+   "trous noirs",
+   "Espaço"
+  ],
+  [
+   "méga constructions",
+   "Engenharia e Construção"
+  ],
+  [
+   "ingénierie documentaire",
+   "Engenharia e Construção"
+  ],
+  [
+   "la vie en",
+   "Países e Vida Real"
+  ],
+  [
+   "vivre en",
+   "Países e Vida Real"
+  ],
+  [
+   "pays le plus pauvre du monde",
+   "Países e Vida Real"
+  ],
+  [
+   "le saviez-vous",
+   "Curiosidades"
+  ],
+  [
+   "faits incroyables",
+   "Curiosidades"
+  ],
+  [
+   "expliqué",
+   "Curiosidades"
+  ],
+  [
+   "la bible expliquée",
+   "Bíblia e Religião"
+  ],
+  [
+   "histoire biblique documentaire",
+   "Bíblia e Religião"
+  ],
+  [
+   "finances personnelles",
+   "Finanças e Negócios"
+  ],
+  [
+   "histoire d'entreprise",
+   "Finanças e Negócios"
+  ],
+  [
+   "économie documentaire",
+   "Finanças e Negócios"
+  ],
+  [
+   "intelligence artificielle",
+   "Tecnologia e IA"
+  ],
+  [
+   "technologie du futur",
+   "Tecnologia e IA"
+  ],
+  [
+   "musique relaxante",
+   "Música e Relax"
+  ],
+  [
+   "corps humain documentaire",
+   "Saúde e Corpo"
+  ],
+  [
+   "santé après 60 ans",
+   "Saúde e Corpo"
+  ]
+ ]
+}
