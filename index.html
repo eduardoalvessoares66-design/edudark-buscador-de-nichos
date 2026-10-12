@@ -486,7 +486,7 @@ $('#dlang').onchange=()=>{LS.set('dlang',$('#dlang').value);fillNiche();discover
 $('#dNoShorts').onchange=()=>{LS.set('dns',$('#dNoShorts').checked);const lang=$('#dlang').value.split('|')[0];const L=nview(dstore(lang).list);drawDisc(L);const dm=$('#dmsg');dm.className='msg info';dm.textContent=`${L.length} canais no filtro (0 unidades gastas).${L.length<TARGET?' Clique em 🔎 Procurar canais novos para achar mais.':''}`};
 $('#dref').onclick=()=>discover(true);
 let DISC=[],DBUSY=false;
-const RADAR='https://raw.githubusercontent.com/eduardoalvessoares66-design/edudark-buscador-de-nichos/main/data/';let RADAR_INFO={};
+const RADAR='https://raw.githubusercontent.com/edudarkoficial/buscador-de-nichos/main/data/';let RADAR_INFO={};
 async function loadRadar(lang){const c=LS.get('radar_'+lang,null);if(c&&Date.now()-c.t<3*3600e3)return c.d;
   try{const r=await fetch(RADAR+'novos_'+lang+'.json?'+Math.floor(Date.now()/3600e3));if(!r.ok)throw 0;const d=await r.json();
     try{LS.set('radar_'+lang,{t:Date.now(),d})}catch(e){}return d}catch(e){return c?c.d:null}}
