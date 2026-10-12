@@ -212,6 +212,13 @@ footer{color:var(--mut);font-size:11.5px;text-align:center;margin-top:40px}
     <label class="chk"><input type="checkbox" id="dNoShorts"> Esconder Shorts</label>
     <button class="btn" id="dref">🔎 Procurar canais novos</button></div>
   </div>
+  <div class="filters" style="margin:0 0 6px">
+    <label>Máx. inscritos <input type="number" id="dSubs" value="" step="1000" placeholder="qualquer"></label>
+    <label>Mín. views do vídeo <input type="number" id="dViews" value="" step="1000" placeholder="qualquer"></label>
+    <label>1º vídeo há no máx. <select id="dAge"><option value="0">90 dias</option><option value="60">60 dias</option><option value="30">30 dias</option><option value="15">15 dias</option><option value="7">7 dias</option></select></label>
+    <label>Ordenar <select id="dSort"><option value="score">Nota de nicho</option><option value="mult">Views ÷ inscritos</option><option value="views">Views do vídeo</option><option value="vpd">Views por dia</option><option value="young">Canal mais novo</option><option value="subs">Menos inscritos</option></select></label>
+    <span class="hint" style="margin:0">Filtros não gastam cota.</span>
+  </div>
   <div class="msg" id="dmsg"></div>
   <div class="loader" id="dload"><i></i><span id="dlt">Procurando canais novos...</span></div>
   <div class="cards" id="dcards"></div>
@@ -268,7 +275,7 @@ footer{color:var(--mut);font-size:11.5px;text-align:center;margin-top:40px}
     <p class="hint">O contador no topo é uma estimativa feita neste navegador. O número oficial fica no Google Cloud Console → APIs e serviços → Cotas.</p>
   </div>
 </section>
-<footer>Buscador de Nichos · dados públicos da YouTube Data API v3 · sua chave fica só no seu navegador</footer>
+<footer>Buscador de Nichos by Edudark · dados públicos da YouTube Data API v3 · sua chave fica só no seu navegador</footer>
 </div>
 
 <script>
@@ -467,6 +474,8 @@ const KW={"pt":[["documentário completo","Documentário"],["o que aconteceu com
 const NEW_AGE=90,NEW_MAXV=15,NEW_MINVIEWS=20000,MAX_SEARCH=3,TARGET=10;
 $('#dlang').value=LS.get('dlang','pt|BR');
 $('#dNoShorts').checked=LS.get('dns',false);
+['dSubs','dViews','dAge','dSort'].forEach(id=>{const v=LS.get(id,null);if(v!=null)$('#'+id).value=v;
+  $('#'+id).addEventListener('change',()=>{LS.set(id,$('#'+id).value);$('#dNoShorts').onchange()})});
 function nichesOf(lang){return[...new Set((KW[lang]||KW.en).map(x=>x[1]))]}
 function fillNiche(){const lang=$('#dlang').value.split('|')[0],cur=LS.get('dniche','*');
   $('#dniche').innerHTML='<option value="">🎯 Escolha o nicho...</option><option value="*">🌎 Todos (rodízio)</option>'+nichesOf(lang).map(n=>`<option${n===cur?' selected':''}>${esc(n)}</option>`).join('');
@@ -474,10 +483,10 @@ function fillNiche(){const lang=$('#dlang').value.split('|')[0],cur=LS.get('dnic
 fillNiche();
 $('#dniche').onchange=()=>{LS.set('dniche',$('#dniche').value);discover()};
 $('#dlang').onchange=()=>{LS.set('dlang',$('#dlang').value);fillNiche();discover()};
-$('#dNoShorts').onchange=()=>{LS.set('dns',$('#dNoShorts').checked);const lang=$('#dlang').value.split('|')[0];const L=nview(dstore(lang).list);drawDisc(L);const dm=$('#dmsg');dm.className='msg info';dm.textContent=`${L.length} canais novos no filtro (0 unidades gastas).${L.length<TARGET?' Clique em 🔎 Procurar canais novos para achar mais.':''}`};
+$('#dNoShorts').onchange=()=>{LS.set('dns',$('#dNoShorts').checked);const lang=$('#dlang').value.split('|')[0];const L=nview(dstore(lang).list);drawDisc(L);const dm=$('#dmsg');dm.className='msg info';dm.textContent=`${L.length} canais no filtro (0 unidades gastas).${L.length<TARGET?' Clique em 🔎 Procurar canais novos para achar mais.':''}`};
 $('#dref').onclick=()=>discover(true);
 let DISC=[],DBUSY=false;
-const RADAR='https://raw.githubusercontent.com/eduardoalvessoares66-design/radar-nichos/main/data/';let RADAR_INFO={};
+const RADAR='https://raw.githubusercontent.com/eduardoalvessoares66-design/edudark-buscador-de-nichos/main/data/';let RADAR_INFO={};
 async function loadRadar(lang){const c=LS.get('radar_'+lang,null);if(c&&Date.now()-c.t<3*3600e3)return c.d;
   try{const r=await fetch(RADAR+'novos_'+lang+'.json?'+Math.floor(Date.now()/3600e3));if(!r.ok)throw 0;const d=await r.json();
     try{LS.set('radar_'+lang,{t:Date.now(),d})}catch(e){}return d}catch(e){return c?c.d:null}}
@@ -491,7 +500,9 @@ function nview(list){const n=$('#dniche').value;return dview(n&&n!=='*'?list.fil
 function dview(list){const ns=$('#dNoShorts').checked;
   return list.map(e=>{const vids=ns?e.vids.filter(v=>!v.short):e.vids;if(!vids.length)return null;if(ns&&e.shortsPct>=60)return null;
     const x={...e,vids};const b=vids[0];x.best=b.views;x.vpd=b.vpd;x.avg=e.nvid?e.total/e.nvid:0;x.age=Math.max(1,(Date.now()-new Date(e.first))/864e5);
-    x.mult=x.hidden||!x.subs?null:b.views/x.subs;x.score=score(x);return x}).filter(Boolean).sort((a,b)=>b.score-a.score)}
+    x.mult=x.hidden||!x.subs?null:b.views/x.subs;x.score=score(x);return x}).filter(Boolean)
+    .filter(e=>{const ms=+$('#dSubs').value||Infinity,mv=+$('#dViews').value||0,ma=+$('#dAge').value;return(e.hidden||e.subs<=ms)&&e.best>=mv&&(!ma||e.age<=ma)})
+    .sort((a,b)=>{const k=$('#dSort').value,f={score:e=>e.score,mult:e=>e.mult||0,views:e=>e.best,vpd:e=>e.vpd,young:e=>-e.age,subs:e=>-(e.hidden?1e12:e.subs)}[k];return f(b)-f(a)})}
 async function discover(force){
   if(DBUSY)return;
   const [lang,reg]=$('#dlang').value.split('|'),dm=$('#dmsg'),ns=$('#dNoShorts').checked,niche=$('#dniche').value;dm.className='msg';
